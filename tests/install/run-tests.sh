@@ -133,6 +133,30 @@ test_opencode_skill_install() {
   rm -rf "$dest"
 }
 
+test_codex_install() {
+  local name="codex selection installs codex agents and skill wrappers"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=codex --languages=php --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.codex/agents/orchestrator.toml" ] \
+        && [ -f "${dest}/.codex/agents/php-implementer.toml" ] \
+        && [ -f "${dest}/.agents/skills/orchestration-loop/SKILL.md" ] \
+        && [ -f "${dest}/.agents/skills/code-review/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/orchestration-loop/SKILL.md" ] \
+        && [ -f "${dest}/.github/instructions/php.instructions.md" ] \
+        && [ ! -d "${dest}/.claude" ] \
+        && [ ! -d "${dest}/.opencode" ] \
+        && [ ! -f "${dest}/CLAUDE.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "expected Codex assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
 # -----------------------------------------------------------------------------
 # 5. --skip-existing leaves existing files untouched.
 # -----------------------------------------------------------------------------
@@ -325,6 +349,28 @@ test_symfony_framework_install_opencode() {
   rm -rf "$dest"
 }
 
+test_symfony_framework_install_codex() {
+  local name="symfony framework installs optional codex assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=codex --languages=php --frameworks='php:symfony' --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.codex/agents/symfony-implementer.toml" ] \
+        && [ -f "${dest}/.agents/skills/symfony-functional-tests/SKILL.md" ] \
+        && [ -f "${dest}/.agents/skills/symfony-runner-selection/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/symfony-functional-tests/SKILL.md" ] \
+        && [ -f "${dest}/.github/instructions/symfony.instructions.md" ] \
+        && [ ! -d "${dest}/.claude" ] \
+        && [ ! -d "${dest}/.opencode" ]; then
+      pass "$name"
+    else
+      fail "$name" "symfony codex assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
 test_php_without_framework_excludes_symfony_assets() {
   local name="php without symfony excludes framework-specific assets"
   local dest; dest=$(mktmp)
@@ -379,6 +425,7 @@ main() {
   test_language_filtering
   test_agent_filtering
   test_opencode_skill_install
+  test_codex_install
   test_skip_existing
   test_force
   test_dry_run
@@ -389,6 +436,7 @@ main() {
   test_symfony_framework_install_copilot
   test_symfony_framework_install_claude
   test_symfony_framework_install_opencode
+  test_symfony_framework_install_codex
   test_php_without_framework_excludes_symfony_assets
   test_framework_requires_selected_language
   test_invalid_ref
