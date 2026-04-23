@@ -35,6 +35,10 @@ Do not use when:
    - feature or refactor → `orchestration-loop`
    - bug / unexpected behavior → `debugging` then `test-driven-development` when code changes are needed
    - quality validation only → `quality-gates`
+   - PHP standards / structure choice → `php-foundations`
+   - PHP package choice → `php-package-selection`
+   - PHP testing / analysis / modernization → `php-quality-tooling`
+   - Laravel package or feature choice → `laravel-package-selection`
    - review only → `code-review`
    - planning only → `research-planning`
    - Symfony HTTP or persistence changes → add the relevant Symfony skill after the base workflow
@@ -49,6 +53,10 @@ Do not use when:
 | Build, implement, deliver, refactor | `orchestration-loop` |
 | Fix a failing behavior | `debugging` → `test-driven-development` |
 | Plan or scope before coding | `research-planning` |
+| PHP foundations or structure | `php-foundations` |
+| PHP dependency choice | `php-package-selection` |
+| PHP tooling or modernization | `php-quality-tooling` |
+| Laravel package choice | `laravel-package-selection` |
 | Review a diff or PR | `code-review` |
 | Run lint, tests, build, or readiness checks | `quality-gates` |
 | Symfony API Platform work | base route + `symfony-api-platform-resources` |
@@ -67,6 +75,10 @@ Do not use when:
 
 - `.github/skills/orchestration-loop/SKILL.md`
 - `.github/skills/debugging/SKILL.md`
+- `.github/skills/php-foundations/SKILL.md`
+- `.github/skills/php-package-selection/SKILL.md`
+- `.github/skills/php-quality-tooling/SKILL.md`
+- `.github/skills/laravel-package-selection/SKILL.md`
 - `.github/skills/research-planning/SKILL.md`
 - `.github/skills/test-driven-development/SKILL.md`
 - `.github/skills/quality-gates/SKILL.md`

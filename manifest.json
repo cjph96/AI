@@ -218,7 +218,10 @@
           ".github/instructions/php-testing.instructions.md",
           ".github/agents/php-research-planner.agent.md",
           ".github/agents/php-implementer.agent.md",
-          ".github/agents/php-code-reviewer.agent.md"
+          ".github/agents/php-code-reviewer.agent.md",
+          ".github/skills/php-foundations/SKILL.md",
+          ".github/skills/php-package-selection/SKILL.md",
+          ".github/skills/php-quality-tooling/SKILL.md"
         ],
         "claude": [
           ".github/instructions/php.instructions.md",
@@ -228,7 +231,10 @@
           ".github/agents/php-code-reviewer.agent.md",
           ".claude/agents/php-research-planner.md",
           ".claude/agents/php-implementer.md",
-          ".claude/agents/php-code-reviewer.md"
+          ".claude/agents/php-code-reviewer.md",
+          ".claude/skills/php-foundations/SKILL.md",
+          ".claude/skills/php-package-selection/SKILL.md",
+          ".claude/skills/php-quality-tooling/SKILL.md"
         ],
         "opencode": [
           ".github/instructions/php.instructions.md",
@@ -238,7 +244,10 @@
           ".github/agents/php-code-reviewer.agent.md",
           ".opencode/agents/php-research-planner.md",
           ".opencode/agents/php-implementer.md",
-          ".opencode/agents/php-code-reviewer.md"
+          ".opencode/agents/php-code-reviewer.md",
+          ".claude/skills/php-foundations/SKILL.md",
+          ".claude/skills/php-package-selection/SKILL.md",
+          ".claude/skills/php-quality-tooling/SKILL.md"
         ],
         "cursor": [
           ".github/instructions/php.instructions.md",
@@ -246,6 +255,9 @@
           ".github/agents/php-research-planner.agent.md",
           ".github/agents/php-implementer.agent.md",
           ".github/agents/php-code-reviewer.agent.md",
+          ".claude/skills/php-foundations/SKILL.md",
+          ".claude/skills/php-package-selection/SKILL.md",
+          ".claude/skills/php-quality-tooling/SKILL.md",
           ".cursor/rules/php.mdc",
           ".cursor/rules/php-testing.mdc"
         ],
@@ -255,9 +267,15 @@
           ".github/agents/php-research-planner.agent.md",
           ".github/agents/php-implementer.agent.md",
           ".github/agents/php-code-reviewer.agent.md",
+          ".github/skills/php-foundations/SKILL.md",
+          ".github/skills/php-package-selection/SKILL.md",
+          ".github/skills/php-quality-tooling/SKILL.md",
           ".codex/agents/php-research-planner.toml",
           ".codex/agents/php-implementer.toml",
-          ".codex/agents/php-code-reviewer.toml"
+          ".codex/agents/php-code-reviewer.toml",
+          ".agents/skills/php-foundations/SKILL.md",
+          ".agents/skills/php-package-selection/SKILL.md",
+          ".agents/skills/php-quality-tooling/SKILL.md"
         ]
       },
       "frameworks": {
@@ -375,25 +393,31 @@
           "files_by_agent": {
             "copilot": [
               ".github/instructions/laravel.instructions.md",
-              ".github/instructions/laravel-testing.instructions.md"
+              ".github/instructions/laravel-testing.instructions.md",
+              ".github/skills/laravel-package-selection/SKILL.md"
             ],
             "claude": [
               ".github/instructions/laravel.instructions.md",
-              ".github/instructions/laravel-testing.instructions.md"
+              ".github/instructions/laravel-testing.instructions.md",
+              ".claude/skills/laravel-package-selection/SKILL.md"
             ],
             "opencode": [
               ".github/instructions/laravel.instructions.md",
-              ".github/instructions/laravel-testing.instructions.md"
+              ".github/instructions/laravel-testing.instructions.md",
+              ".claude/skills/laravel-package-selection/SKILL.md"
             ],
             "cursor": [
               ".github/instructions/laravel.instructions.md",
               ".github/instructions/laravel-testing.instructions.md",
+              ".claude/skills/laravel-package-selection/SKILL.md",
               ".cursor/rules/laravel.mdc",
               ".cursor/rules/laravel-testing.mdc"
             ],
             "codex": [
               ".github/instructions/laravel.instructions.md",
-              ".github/instructions/laravel-testing.instructions.md"
+              ".github/instructions/laravel-testing.instructions.md",
+              ".github/skills/laravel-package-selection/SKILL.md",
+              ".agents/skills/laravel-package-selection/SKILL.md"
             ]
           }
         }

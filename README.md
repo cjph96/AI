@@ -21,6 +21,8 @@ The script asks interactively for:
 
 Only the files mapped in [`manifest.json`](manifest.json) for the selected combination are copied. Framework add-ons stay optional: for example, selecting `php:symfony` installs Symfony-specific instructions, specialist agents, skills, and slash-command surfaces, while plain `php` does not.
 
+Selecting `php` now also installs the base PHP skills for foundations, package selection, and quality tooling. Selecting `php:laravel` adds a Laravel-first package selection skill on top of the base PHP surface.
+
 ### Requirements
 
 - `bash`
@@ -87,6 +89,7 @@ If Symfony is not selected, none of those framework-specific files are copied.
 When the installer includes `php:laravel`, it adds Laravel-specific framework guidance on top of the base PHP assets:
 
 - Laravel implementation and testing instructions.
+- Laravel-first package selection skill.
 - Cursor rule wrappers for Laravel and Laravel testing.
 
 If Laravel is not selected, none of those framework-specific files are copied.
@@ -133,6 +136,12 @@ The test suite runs offline using `--source=.` and `--manifest=./manifest.json`.
 
 The `doc/` directory contains research notes and adaptation guidance for:
 
+- PHP foundations and standards
+- Symfony
+- Laravel
+- PHP ecosystem packages
+- PHP testing
+- PHPStan and quality tooling
 - GitHub Copilot
 - GitHub Copilot for VS Code
 - Claude Code

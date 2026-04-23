@@ -56,6 +56,7 @@ test_basic_install() {
       --agents=copilot --languages=php --non-interactive >/dev/null 2>&1; then
     [ -f "${dest}/.github/agents/orchestrator.agent.md" ] \
       && [ -f "${dest}/.github/instructions/php.instructions.md" ] \
+      && [ -f "${dest}/.github/skills/php-foundations/SKILL.md" ] \
       && [ -f "${dest}/AGENTS.md" ] \
       && [ ! -d "${dest}/.claude" ] \
       && [ ! -d "${dest}/.opencode" ] \
@@ -115,6 +116,7 @@ test_agent_filtering() {
   if [ -d "${dest}/.claude/agents" ] \
       && [ -f "${dest}/CLAUDE.md" ] \
       && [ -f "${dest}/.claude/agents/php-implementer.md" ] \
+      && [ -f "${dest}/.claude/skills/php-foundations/SKILL.md" ] \
       && [ -f "${dest}/.github/agents/php-implementer.agent.md" ] \
       && [ -f "${dest}/.github/instructions/php.instructions.md" ] \
       && [ ! -d "${dest}/.opencode" ]; then
@@ -141,6 +143,7 @@ test_opencode_skill_install() {
   if [ -f "${dest}/.opencode/agents/orchestrator.md" ] \
       && [ "$commands_ok" = "1" ] \
       && [ -f "${dest}/.claude/skills/orchestration-loop/SKILL.md" ] \
+      && [ -f "${dest}/.claude/skills/php-foundations/SKILL.md" ] \
       && [ -f "${dest}/.claude/skills/code-review/references/verdict-template.md" ] \
       && [ -f "${dest}/.claude/skills/quality-gates/assets/report-template.md" ] \
       && [ -f "${dest}/.claude/skills/research-planning/references/brief-template.md" ] \
@@ -160,6 +163,7 @@ test_cursor_install() {
       --agents=cursor --languages=php --non-interactive >/dev/null 2>&1; then
     if [ -f "${dest}/.cursor/rules/code-quality.mdc" ] \
         && [ -f "${dest}/.cursor/rules/php.mdc" ] \
+      && [ -f "${dest}/.claude/skills/php-foundations/SKILL.md" ] \
         && [ -f "${dest}/.github/instructions/code-quality.instructions.md" ] \
         && [ -f "${dest}/.github/agents/orchestrator.agent.md" ] \
         && [ -f "${dest}/.claude/skills/orchestration-loop/SKILL.md" ] \
@@ -186,8 +190,10 @@ test_codex_install() {
     if [ -f "${dest}/.codex/agents/orchestrator.toml" ] \
         && [ -f "${dest}/.codex/agents/php-implementer.toml" ] \
         && [ -f "${dest}/.agents/skills/orchestration-loop/SKILL.md" ] \
+      && [ -f "${dest}/.agents/skills/php-foundations/SKILL.md" ] \
         && [ -f "${dest}/.agents/skills/skill-selection/SKILL.md" ] \
         && [ -f "${dest}/.agents/skills/code-review/SKILL.md" ] \
+      && [ -f "${dest}/.github/skills/php-foundations/SKILL.md" ] \
         && [ -f "${dest}/.github/skills/orchestration-loop/SKILL.md" ] \
         && [ -f "${dest}/.github/skills/skill-selection/SKILL.md" ] \
         && [ -f "${dest}/.github/instructions/php.instructions.md" ] \
@@ -466,6 +472,7 @@ test_laravel_framework_install_cursor() {
       --agents=cursor --languages=php --frameworks='php:laravel' --non-interactive >/dev/null 2>&1; then
     if [ -f "${dest}/.github/instructions/laravel.instructions.md" ] \
         && [ -f "${dest}/.github/instructions/laravel-testing.instructions.md" ] \
+        && [ -f "${dest}/.claude/skills/laravel-package-selection/SKILL.md" ] \
         && [ -f "${dest}/.cursor/rules/laravel.mdc" ] \
         && [ -f "${dest}/.cursor/rules/laravel-testing.mdc" ] \
         && [ ! -f "${dest}/.github/instructions/symfony.instructions.md" ]; then

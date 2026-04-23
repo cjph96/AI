@@ -93,6 +93,10 @@ Canonical skills in [.github/skills/](.github/skills/), mirrored to [.claude/ski
 | `orchestration-loop` | Runs the research-implement-review loop end-to-end. |
 | `research-planning` | Produces a structured planning brief. |
 | `skill-selection` | Chooses the smallest applicable skill or skill sequence before execution. |
+| `php-foundations` | Applies modern PHP 8.x standards, PSR alignment, and Composer-aware structure. |
+| `php-package-selection` | Chooses Composer dependencies with framework-aware tradeoffs. |
+| `php-quality-tooling` | Structures PHPUnit or Pest, PHPStan, PHP CS Fixer, and Rector workflows. |
+| `laravel-package-selection` | Chooses Laravel-first or Spatie-backed solutions before broader package search. |
 | `code-review` | Performs a five-axis review and returns a verdict. |
 | `test-driven-development` | RED → GREEN → REFACTOR cycle. |
 | `quality-gates` | Runs lint/static-analysis/tests in deterministic order. |
