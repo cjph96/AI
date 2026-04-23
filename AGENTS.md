@@ -48,6 +48,8 @@ Top-level agent catalog. This file is the canonical cross-tool baseline: an offi
 Optional framework add-on:
 When the installer includes `php:symfony`, the workspace also gains `symfony-research-planner`, `symfony-implementer`, and `symfony-code-reviewer` wrappers plus Symfony-specific skills and prompts.
 
+When the installer includes `php:laravel`, the workspace gains Laravel-specific framework instructions and testing guidance on top of the base PHP specialists.
+
 ### JavaScript / TypeScript specialists
 
 | Agent | Scope |
@@ -55,6 +57,22 @@ When the installer includes `php:symfony`, the workspace also gains `symfony-res
 | `javascript-research-planner` | Modern JS/TS, React/Vue, state, routing. |
 | `javascript-implementer` | Implements TS/JS following module & component conventions. |
 | `javascript-code-reviewer` | TS strictness, component architecture, hooks/composables, accessibility. |
+
+### Python specialists
+
+| Agent | Scope |
+|-------|-------|
+| `python-research-planner` | Python services, libraries, CLIs, and framework planning briefs. |
+| `python-implementer` | Implements Python changes with typing, tooling, and tests. |
+| `python-code-reviewer` | Typing, boundary validation, security, and test quality. |
+
+### Go specialists
+
+| Agent | Scope |
+|-------|-------|
+| `go-research-planner` | Go services, packages, handlers, and CLI planning briefs. |
+| `go-implementer` | Implements Go changes with package, error, and test discipline. |
+| `go-code-reviewer` | Package design, errors, concurrency, security, and tests. |
 
 Canonical bodies for each agent live in [.github/agents/](.github/agents/). Claude Code and OpenCode wrappers delegate to those bodies via `Read` on session start. Cursor does not currently have a documented equivalent repository file format for custom agents, so its adaptation layer uses `AGENTS.md`, `.cursor/rules/`, and shared skills instead. Codex uses `.codex/agents/` wrappers that read the canonical body rather than duplicating it.
 
@@ -74,6 +92,7 @@ Canonical skills in [.github/skills/](.github/skills/), mirrored to [.claude/ski
 |-------|---------|
 | `orchestration-loop` | Runs the research-implement-review loop end-to-end. |
 | `research-planning` | Produces a structured planning brief. |
+| `skill-selection` | Chooses the smallest applicable skill or skill sequence before execution. |
 | `code-review` | Performs a five-axis review and returns a verdict. |
 | `test-driven-development` | RED → GREEN → REFACTOR cycle. |
 | `quality-gates` | Runs lint/static-analysis/tests in deterministic order. |
@@ -90,8 +109,11 @@ Canonical instruction files live in [.github/instructions/](.github/instructions
 - `git-workflow.instructions.md` — trunk-based, conventional commits, no force-push.
 - `agent-skills-best-practices.instructions.md` — SKILL.md authoring standard.
 - `php.instructions.md`, `php-testing.instructions.md` — PHP 8.x + DDD/CQRS + PHPUnit.
+- `laravel.instructions.md`, `laravel-testing.instructions.md` — optional Laravel layer, installed only when `php:laravel` is selected.
 - `symfony.instructions.md`, `symfony-testing.instructions.md` — optional Symfony layer, installed only when `php:symfony` is selected.
 - `javascript.instructions.md`, `javascript-testing.instructions.md` — TS strict, Vitest/Jest, MSW.
+- `python.instructions.md`, `python-testing.instructions.md` — Python typing, module design, pytest conventions.
+- `go.instructions.md`, `go-testing.instructions.md` — Go package design, error handling, table-driven tests.
 
 OpenCode loads these via the `instructions` field in [opencode.json](opencode.json). Claude Code loads them via `@`-imports in [CLAUDE.md](CLAUDE.md). GitHub Copilot activates them automatically per the `applyTo` glob. Cursor maps them through thin `.cursor/rules/*.mdc` wrappers that point back to the canonical instruction files. Codex reads this file directly and uses `.codex/agents/` plus `.agents/skills/` as its native projections.
 

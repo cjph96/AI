@@ -58,6 +58,6 @@ When validating changes, Copilot should:
 
 ## When unsure
 
-Read the relevant `.github/instructions/*.instructions.md` file whose `applyTo` glob matches the files you are editing. If multiple agents or skills apply, pick the generic one first and only use a language-specific variant (`php-*`, `javascript-*`) when the codebase clearly requires stack-specific conventions.
+Read the relevant `.github/instructions/*.instructions.md` file whose `applyTo` glob matches the files you are editing. If multiple agents or skills apply, pick the generic one first and only use a language-specific variant (`php-*`, `javascript-*`, `python-*`, `go-*`) when the codebase clearly requires stack-specific conventions.
 
 Trust these instructions. Search the repo only if information here is incomplete or appears wrong.

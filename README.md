@@ -15,7 +15,7 @@ curl -fsSL https://raw.githubusercontent.com/cristianperez/AI/main/install.sh | 
 The script asks interactively for:
 
 1. **Agents** — GitHub Copilot, Claude Code, OpenCode, Cursor, Codex (multi-select, at least one).
-2. **Languages** — PHP, JavaScript/TypeScript.
+2. **Languages** — PHP, JavaScript/TypeScript, Python, Go.
 3. **Frameworks** per selected language (Symfony/Laravel for PHP; Vue/React/Vanilla for JS).
 4. **Technologies** — PostgreSQL, Redis, AWS SQS.
 
@@ -81,6 +81,15 @@ When the installer includes `php:symfony`, it adds an extra framework layer on t
 - Curated Symfony skills and tool-native workflow surfaces for the supported adapters.
 
 If Symfony is not selected, none of those framework-specific files are copied.
+
+### Optional Laravel package
+
+When the installer includes `php:laravel`, it adds Laravel-specific framework guidance on top of the base PHP assets:
+
+- Laravel implementation and testing instructions.
+- Cursor rule wrappers for Laravel and Laravel testing.
+
+If Laravel is not selected, none of those framework-specific files are copied.
 
 ## Extending the catalog
 

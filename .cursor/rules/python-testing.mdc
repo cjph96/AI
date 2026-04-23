@@ -1,0 +1,11 @@
+---
+description: Apply the repository Python testing conventions.
+globs:
+  - "**/test_*.py"
+  - "**/*_test.py"
+  - "**/tests/**/*.py"
+---
+
+When this rule matches, read and follow `.github/instructions/python-testing.instructions.md`.
+
+Use that file as the canonical source for pytest structure, fixtures, mocking, and async testing.

@@ -22,12 +22,18 @@ The following path-scoped rules apply when you work with matching files. Claude 
 - Orchestration loop contract — @.github/instructions/orchestration-loop.instructions.md
 - Skill authoring standard — @.github/instructions/agent-skills-best-practices.instructions.md
 
-PHP and JS/TS rules are only loaded when you work inside a PHP or JS/TS codebase:
+Language and framework rules are loaded when the matching files are present in the installed selection:
 
 - PHP — @.github/instructions/php.instructions.md
 - PHP testing — @.github/instructions/php-testing.instructions.md
+- Laravel — @.github/instructions/laravel.instructions.md
+- Laravel testing — @.github/instructions/laravel-testing.instructions.md
 - JavaScript / TypeScript — @.github/instructions/javascript.instructions.md
 - JavaScript / TypeScript testing — @.github/instructions/javascript-testing.instructions.md
+- Python — @.github/instructions/python.instructions.md
+- Python testing — @.github/instructions/python-testing.instructions.md
+- Go — @.github/instructions/go.instructions.md
+- Go testing — @.github/instructions/go-testing.instructions.md
 
 ### How to invoke subagents
 

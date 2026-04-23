@@ -9,7 +9,13 @@
     ".github/instructions/agent-skills-best-practices.instructions.md",
     ".github/instructions/php.instructions.md",
     ".github/instructions/php-testing.instructions.md",
+    ".github/instructions/laravel.instructions.md",
+    ".github/instructions/laravel-testing.instructions.md",
     ".github/instructions/javascript.instructions.md",
-    ".github/instructions/javascript-testing.instructions.md"
+    ".github/instructions/javascript-testing.instructions.md",
+    ".github/instructions/python.instructions.md",
+    ".github/instructions/python-testing.instructions.md",
+    ".github/instructions/go.instructions.md",
+    ".github/instructions/go-testing.instructions.md"
   ]
 }

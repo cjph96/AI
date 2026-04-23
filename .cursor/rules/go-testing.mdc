@@ -1,0 +1,9 @@
+---
+description: Apply the repository Go testing conventions.
+globs:
+  - "**/*_test.go"
+---
+
+When this rule matches, read and follow `.github/instructions/go-testing.instructions.md`.
+
+Use that file as the canonical source for table-driven tests, subtests, helpers, and integration boundaries.

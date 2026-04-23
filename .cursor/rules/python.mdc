@@ -1,0 +1,9 @@
+---
+description: Apply the repository Python coding standards.
+globs:
+  - "**/*.py"
+---
+
+When this rule matches, read and follow `.github/instructions/python.instructions.md`.
+
+Use that file as the canonical source for Python standards, typing, module design, and boundary handling.

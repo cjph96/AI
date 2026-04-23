@@ -1,0 +1,15 @@
+---
+description: Apply the repository Laravel conventions when working in a Laravel codebase.
+globs:
+  - "**/*.php"
+  - "config/**/*.php"
+  - "routes/**/*.php"
+  - "resources/views/**/*.blade.php"
+  - "bootstrap/**/*.php"
+  - "artisan"
+  - "composer.json"
+---
+
+When this rule matches, read and follow `.github/instructions/laravel.instructions.md`.
+
+Use that file as the canonical source for Laravel layering, validation, policies, queues, and Eloquent expectations.

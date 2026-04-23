@@ -84,6 +84,26 @@ test_language_filtering() {
   rm -rf "$dest"
 }
 
+test_python_and_go_install() {
+  local name="python and go selections install their native assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=copilot --languages=python,go --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.github/instructions/python.instructions.md" ] \
+        && [ -f "${dest}/.github/agents/python-implementer.agent.md" ] \
+        && [ -f "${dest}/.github/instructions/go.instructions.md" ] \
+        && [ -f "${dest}/.github/agents/go-implementer.agent.md" ] \
+        && [ ! -f "${dest}/.github/instructions/php.instructions.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "python or go assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
 # -----------------------------------------------------------------------------
 # 4. Agent filtering: claude selection must not populate .github/.
 # -----------------------------------------------------------------------------
@@ -166,8 +186,10 @@ test_codex_install() {
     if [ -f "${dest}/.codex/agents/orchestrator.toml" ] \
         && [ -f "${dest}/.codex/agents/php-implementer.toml" ] \
         && [ -f "${dest}/.agents/skills/orchestration-loop/SKILL.md" ] \
+        && [ -f "${dest}/.agents/skills/skill-selection/SKILL.md" ] \
         && [ -f "${dest}/.agents/skills/code-review/SKILL.md" ] \
         && [ -f "${dest}/.github/skills/orchestration-loop/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/skill-selection/SKILL.md" ] \
         && [ -f "${dest}/.github/instructions/php.instructions.md" ] \
         && [ ! -d "${dest}/.claude" ] \
         && [ ! -d "${dest}/.opencode" ] \
@@ -437,6 +459,26 @@ test_php_without_framework_excludes_symfony_assets() {
   rm -rf "$dest"
 }
 
+test_laravel_framework_install_cursor() {
+  local name="laravel framework installs optional cursor assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=cursor --languages=php --frameworks='php:laravel' --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.github/instructions/laravel.instructions.md" ] \
+        && [ -f "${dest}/.github/instructions/laravel-testing.instructions.md" ] \
+        && [ -f "${dest}/.cursor/rules/laravel.mdc" ] \
+        && [ -f "${dest}/.cursor/rules/laravel-testing.mdc" ] \
+        && [ ! -f "${dest}/.github/instructions/symfony.instructions.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "laravel cursor assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
 test_framework_requires_selected_language() {
   local name="framework selection requires parent language"
   local dest; dest=$(mktmp)
@@ -470,6 +512,7 @@ main() {
   test_manifest_valid
   test_basic_install
   test_language_filtering
+  test_python_and_go_install
   test_agent_filtering
   test_opencode_skill_install
   test_cursor_install
@@ -487,6 +530,7 @@ main() {
   test_symfony_framework_install_cursor
   test_symfony_framework_install_codex
   test_php_without_framework_excludes_symfony_assets
+  test_laravel_framework_install_cursor
   test_framework_requires_selected_language
   test_invalid_ref
 

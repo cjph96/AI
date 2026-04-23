@@ -1,0 +1,9 @@
+---
+description: Apply the repository Go coding standards.
+globs:
+  - "**/*.go"
+---
+
+When this rule matches, read and follow `.github/instructions/go.instructions.md`.
+
+Use that file as the canonical source for Go package design, error handling, concurrency, and project hygiene.
