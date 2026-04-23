@@ -42,6 +42,9 @@ Top-level agent catalog. This file is the canonical **rules file for OpenCode**,
 | `php-implementer` | Implements PHP following DDD/CQRS conventions. |
 | `php-code-reviewer` | PSR-12, PHPStan, DDD layering, domain exceptions. |
 
+Optional framework add-on:
+When the installer includes `php:symfony`, the workspace also gains `symfony-research-planner`, `symfony-implementer`, and `symfony-code-reviewer` wrappers plus Symfony-specific skills and prompts.
+
 ### JavaScript / TypeScript specialists
 
 | Agent | Scope |
@@ -84,6 +87,7 @@ Canonical instruction files live in [.github/instructions/](.github/instructions
 - `git-workflow.instructions.md` — trunk-based, conventional commits, no force-push.
 - `agent-skills-best-practices.instructions.md` — SKILL.md authoring standard.
 - `php.instructions.md`, `php-testing.instructions.md` — PHP 8.x + DDD/CQRS + PHPUnit.
+- `symfony.instructions.md`, `symfony-testing.instructions.md` — optional Symfony layer, installed only when `php:symfony` is selected.
 - `javascript.instructions.md`, `javascript-testing.instructions.md` — TS strict, Vitest/Jest, MSW.
 
 OpenCode loads these via the `instructions` field in [opencode.json](opencode.json). Claude Code loads them via `@`-imports in [CLAUDE.md](CLAUDE.md). GitHub Copilot activates them automatically per the `applyTo` glob.

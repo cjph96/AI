@@ -19,7 +19,7 @@ The script asks interactively for:
 3. **Frameworks** per selected language (Symfony/Laravel for PHP; Vue/React/Vanilla for JS).
 4. **Technologies** — PostgreSQL, Redis, AWS SQS.
 
-Only the files mapped in [`manifest.json`](manifest.json) for the selected combination are copied. Categories without mapped files today (most frameworks and technologies) are still offered so the catalog stays uniform; they simply contribute zero files until assets are added.
+Only the files mapped in [`manifest.json`](manifest.json) for the selected combination are copied. Framework add-ons stay optional: for example, selecting `php:symfony` installs Symfony-specific instructions, specialist agents, skills, and slash-command surfaces, while plain `php` does not.
 
 ### Requirements
 
@@ -71,6 +71,16 @@ Given a set of choices, the installer unions:
 - `technologies[<id>].files_by_agent[<agent>]` — same rule.
 
 Duplicate paths are deduplicated; paths are validated against path-traversal before any write.
+
+### Optional Symfony package
+
+When the installer includes `php:symfony`, it adds an extra framework layer on top of the base PHP assets:
+
+- Symfony-specific instructions for implementation and testing.
+- Optional Symfony specialist agents for Copilot, Claude, and OpenCode.
+- Curated Symfony skills and slash commands for Copilot and Claude.
+
+If Symfony is not selected, none of those framework-specific files are copied.
 
 ## Extending the catalog
 

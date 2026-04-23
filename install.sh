@@ -303,6 +303,10 @@ validate_selection() {
     fws="${entry#*:}"
     jq -e --arg id "$lang" '.languages[$id]' "$MANIFEST_FILE" >/dev/null \
       || die "frameworks refer to unknown language: $lang"
+    case " $SELECTED_LANGUAGES " in
+      *" $lang "*) ;;
+      *) die "frameworks refer to unselected language: $lang" ;;
+    esac
     local oldIFS=$IFS; IFS=','
     for fw in $fws; do
       jq -e --arg l "$lang" --arg f "$fw" '.languages[$l].frameworks[$f]' "$MANIFEST_FILE" >/dev/null \
@@ -519,6 +523,66 @@ confirm_plan() {
   esac
 }
 
+has_selected_agent() {
+  local wanted="$1"
+  local agent
+  for agent in $SELECTED_AGENTS; do
+    [ "$agent" = "$wanted" ] && return 0
+  done
+  return 1
+}
+
+has_selected_framework() {
+  local wanted_lang="$1" wanted_fw="$2"
+  local entry lang fws fw
+  local IFS_BAK=$IFS
+  IFS=';'
+  for entry in $SELECTED_FRAMEWORKS; do
+    [ -z "$entry" ] && continue
+    lang="${entry%%:*}"
+    fws="${entry#*:}"
+    [ "$lang" != "$wanted_lang" ] && continue
+    local oldIFS=$IFS; IFS=','
+    for fw in $fws; do
+      if [ "$fw" = "$wanted_fw" ]; then
+        IFS=$oldIFS
+        IFS=$IFS_BAK
+        return 0
+      fi
+    done
+    IFS=$oldIFS
+  done
+  IFS=$IFS_BAK
+  return 1
+}
+
+append_claude_import() {
+  local line="$1" file="$2"
+  grep -Fqx "$line" "$file" && return 0
+  printf '\n%s\n' "$line" >> "$file"
+}
+
+apply_optional_framework_refs() {
+  [ "$DRY_RUN" = "1" ] && return 0
+
+  if has_selected_framework php symfony; then
+    if has_selected_agent claude && [ -f "${DEST}/CLAUDE.md" ]; then
+      append_claude_import "- Symfony — @.github/instructions/symfony.instructions.md" "${DEST}/CLAUDE.md"
+      append_claude_import "- Symfony testing — @.github/instructions/symfony-testing.instructions.md" "${DEST}/CLAUDE.md"
+    fi
+
+    if has_selected_agent opencode && [ -f "${DEST}/opencode.json" ]; then
+      local tmpfile="${TMPDIR_INSTALL}/opencode.json"
+      jq '.instructions += [
+          ".github/instructions/symfony.instructions.md",
+          ".github/instructions/symfony-testing.instructions.md"
+        ] | .instructions |= unique' \
+        "${DEST}/opencode.json" > "$tmpfile"
+      mv "$tmpfile" "${DEST}/opencode.json"
+    fi
+  fi
+}
+
 print_summary() {
   local files_count="$1"
   log ""
@@ -574,6 +638,7 @@ main() {
   pre_check_conflicts "$fileset"
   confirm_plan
   install_files "$fileset"
+  apply_optional_framework_refs
 
   log ""
   log "${C_GREEN}${C_BOLD}AI tools installed.${C_RESET}"

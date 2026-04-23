@@ -88,14 +88,15 @@ test_language_filtering() {
 # 4. Agent filtering: claude selection must not populate .github/.
 # -----------------------------------------------------------------------------
 test_agent_filtering() {
-  local name="claude-only selection does not install copilot files"
+  local name="claude-only selection installs shared canonical assets"
   local dest; dest=$(mktmp)
   bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
       --agents=claude --languages=php --non-interactive >/dev/null 2>&1
   if [ -d "${dest}/.claude/agents" ] \
       && [ -f "${dest}/CLAUDE.md" ] \
       && [ -f "${dest}/.claude/agents/php-implementer.md" ] \
-      && [ ! -d "${dest}/.github" ] \
+      && [ -f "${dest}/.github/agents/php-implementer.agent.md" ] \
+      && [ -f "${dest}/.github/instructions/php.instructions.md" ] \
       && [ ! -d "${dest}/.opencode" ]; then
     pass "$name"
   else
@@ -224,17 +225,95 @@ test_non_interactive_requires_agents() {
 }
 
 # -----------------------------------------------------------------------------
-# 12. Frameworks selection gating: selecting frameworks does not break when
-#     their files_by_agent is empty.
+# 12. Symfony framework selection installs only the Symfony-specific assets.
 # -----------------------------------------------------------------------------
-test_empty_framework_files() {
-  local name="framework with empty files_by_agent does not break"
+test_symfony_framework_install_copilot() {
+  local name="symfony framework installs optional copilot assets"
   local dest; dest=$(mktmp)
   if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
       --agents=copilot --languages=php --frameworks='php:symfony' --non-interactive >/dev/null 2>&1; then
-    pass "$name"
+    if [ -f "${dest}/.github/instructions/symfony.instructions.md" ] \
+        && [ -f "${dest}/.github/agents/symfony-implementer.agent.md" ] \
+        && [ -f "${dest}/.github/skills/symfony-functional-tests/SKILL.md" ] \
+        && [ -f "${dest}/.github/prompts/symfony-check.prompt.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "symfony copilot assets missing"
+    fi
   else
-    fail "$name" "installer errored with empty framework fileset"
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
+test_symfony_framework_install_claude() {
+  local name="symfony framework installs optional claude assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=claude --languages=php --frameworks='php:symfony' --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.claude/agents/symfony-implementer.md" ] \
+        && [ -f "${dest}/.github/agents/symfony-implementer.agent.md" ] \
+        && [ -f "${dest}/.claude/skills/symfony-functional-tests/SKILL.md" ] \
+        && [ -f "${dest}/.claude/commands/symfony-check.md" ] \
+        && grep -Fq -- "- Symfony — @.github/instructions/symfony.instructions.md" "${dest}/CLAUDE.md" \
+        && grep -Fq -- "- Symfony testing — @.github/instructions/symfony-testing.instructions.md" "${dest}/CLAUDE.md"; then
+      pass "$name"
+    else
+      fail "$name" "symfony claude assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
+test_symfony_framework_install_opencode() {
+  local name="symfony framework installs optional opencode assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=opencode --languages=php --frameworks='php:symfony' --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.opencode/agents/symfony-implementer.md" ] \
+        && [ -f "${dest}/.github/agents/symfony-implementer.agent.md" ] \
+        && [ -f "${dest}/.github/instructions/symfony.instructions.md" ] \
+        && jq -e '.instructions | index(".github/instructions/symfony.instructions.md")' "${dest}/opencode.json" >/dev/null 2>&1 \
+        && jq -e '.instructions | index(".github/instructions/symfony-testing.instructions.md")' "${dest}/opencode.json" >/dev/null 2>&1; then
+      pass "$name"
+    else
+      fail "$name" "symfony opencode assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
+test_php_without_framework_excludes_symfony_assets() {
+  local name="php without symfony excludes framework-specific assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=copilot --languages=php --non-interactive >/dev/null 2>&1; then
+    if [ ! -f "${dest}/.github/instructions/symfony.instructions.md" ] \
+        && [ ! -f "${dest}/.github/agents/symfony-implementer.agent.md" ] \
+        && [ ! -f "${dest}/.github/skills/symfony-functional-tests/SKILL.md" ] \
+        && [ ! -f "${dest}/.github/prompts/symfony-check.prompt.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "symfony assets leaked without framework selection"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
+test_framework_requires_selected_language() {
+  local name="framework selection requires parent language"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=claude --frameworks='php:symfony' --non-interactive >/dev/null 2>&1; then
+    fail "$name" "framework accepted without parent language"
+  else
+    pass "$name"
   fi
   rm -rf "$dest"
 }
@@ -268,7 +347,11 @@ main() {
   test_unknown_agent
   test_conflicting_flags
   test_non_interactive_requires_agents
-  test_empty_framework_files
+  test_symfony_framework_install_copilot
+  test_symfony_framework_install_claude
+  test_symfony_framework_install_opencode
+  test_php_without_framework_excludes_symfony_assets
+  test_framework_requires_selected_language
   test_invalid_ref
 
   printf '\nPassed: %d  Failed: %d\n' "$PASS" "$FAIL"

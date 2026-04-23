@@ -8,7 +8,7 @@ Top-level rules live in the repo-root [`AGENTS.md`](../AGENTS.md) (consumed by C
 
 ```
 ┌──────────────┐   plan    ┌────────────┐   brief    ┌────────────────┐
-│  USER / JIRA │──────────▶│ORCHESTRATOR│───────────▶│RESEARCH PLANNER│
+│  USER/TICKET │──────────▶│ORCHESTRATOR│───────────▶│RESEARCH PLANNER│
 └──────────────┘           └────────────┘            └───────┬────────┘
                                  ▲                           │
                                  │ report                    ▼
@@ -64,6 +64,13 @@ Chat modes (`.chatmode.md`) have been removed: VS Code replaced them with custom
 | **JavaScript/TS**  | `javascript-research-planner` | `javascript-implementer` | `javascript-code-reviewer` |
 
 Prefer the generic agents by default. Escalate to specialized variants only when stack-specific conventions (PHP DDD, React/Vue, TanStack, etc.) are needed.
+
+## Optional framework add-ons
+
+Framework-specific assets are not always installed. They are copied only when the installer selection includes the matching framework.
+
+- `php:symfony` adds Symfony instructions, `symfony-*` specialist agents, curated Symfony skills, and framework-specific slash prompts.
+- Base PHP installs continue to expose only the generic PHP assets.
 
 ## Design principles
 

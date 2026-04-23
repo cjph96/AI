@@ -46,6 +46,18 @@
       "label": "Claude Code",
       "files": [
         "CLAUDE.md",
+        ".github/instructions/code-quality.instructions.md",
+        ".github/instructions/testing.instructions.md",
+        ".github/instructions/security.instructions.md",
+        ".github/instructions/git-workflow.instructions.md",
+        ".github/instructions/orchestration-loop.instructions.md",
+        ".github/instructions/agent-skills-best-practices.instructions.md",
+        ".github/agents/orchestrator.agent.md",
+        ".github/agents/research-planner.agent.md",
+        ".github/agents/implementer.agent.md",
+        ".github/agents/code-reviewer.agent.md",
+        ".github/agents/test-reviewer.agent.md",
+        ".github/agents/qa-tester.agent.md",
         ".claude/agents/orchestrator.md",
         ".claude/agents/research-planner.md",
         ".claude/agents/implementer.md",
@@ -73,6 +85,18 @@
       "label": "OpenCode",
       "files": [
         "opencode.json",
+        ".github/instructions/code-quality.instructions.md",
+        ".github/instructions/testing.instructions.md",
+        ".github/instructions/security.instructions.md",
+        ".github/instructions/git-workflow.instructions.md",
+        ".github/instructions/orchestration-loop.instructions.md",
+        ".github/instructions/agent-skills-best-practices.instructions.md",
+        ".github/agents/orchestrator.agent.md",
+        ".github/agents/research-planner.agent.md",
+        ".github/agents/implementer.agent.md",
+        ".github/agents/code-reviewer.agent.md",
+        ".github/agents/test-reviewer.agent.md",
+        ".github/agents/qa-tester.agent.md",
         ".opencode/agents/orchestrator.md",
         ".opencode/agents/research-planner.md",
         ".opencode/agents/implementer.md",
@@ -94,11 +118,21 @@
           ".github/agents/php-code-reviewer.agent.md"
         ],
         "claude": [
+          ".github/instructions/php.instructions.md",
+          ".github/instructions/php-testing.instructions.md",
+          ".github/agents/php-research-planner.agent.md",
+          ".github/agents/php-implementer.agent.md",
+          ".github/agents/php-code-reviewer.agent.md",
           ".claude/agents/php-research-planner.md",
           ".claude/agents/php-implementer.md",
           ".claude/agents/php-code-reviewer.md"
         ],
         "opencode": [
+          ".github/instructions/php.instructions.md",
+          ".github/instructions/php-testing.instructions.md",
+          ".github/agents/php-research-planner.agent.md",
+          ".github/agents/php-implementer.agent.md",
+          ".github/agents/php-code-reviewer.agent.md",
           ".opencode/agents/php-research-planner.md",
           ".opencode/agents/php-implementer.md",
           ".opencode/agents/php-code-reviewer.md"
@@ -111,7 +145,59 @@
         },
         "symfony": {
           "label": "Symfony",
-          "files_by_agent": {}
+          "files_by_agent": {
+            "copilot": [
+              ".github/instructions/symfony.instructions.md",
+              ".github/instructions/symfony-testing.instructions.md",
+              ".github/agents/symfony-research-planner.agent.md",
+              ".github/agents/symfony-implementer.agent.md",
+              ".github/agents/symfony-code-reviewer.agent.md",
+              ".github/prompts/symfony-functional-tests.prompt.md",
+              ".github/prompts/symfony-doctrine-relations.prompt.md",
+              ".github/prompts/symfony-api-resources.prompt.md",
+              ".github/prompts/symfony-messenger.prompt.md",
+              ".github/prompts/symfony-voters.prompt.md",
+              ".github/prompts/symfony-check.prompt.md",
+              ".github/skills/symfony-runner-selection/SKILL.md",
+              ".github/skills/symfony-functional-tests/SKILL.md",
+              ".github/skills/symfony-doctrine-relations/SKILL.md",
+              ".github/skills/symfony-api-platform-resources/SKILL.md",
+              ".github/skills/symfony-messenger/SKILL.md",
+              ".github/skills/symfony-voters/SKILL.md"
+            ],
+            "claude": [
+              ".github/instructions/symfony.instructions.md",
+              ".github/instructions/symfony-testing.instructions.md",
+              ".github/agents/symfony-research-planner.agent.md",
+              ".github/agents/symfony-implementer.agent.md",
+              ".github/agents/symfony-code-reviewer.agent.md",
+              ".claude/agents/symfony-research-planner.md",
+              ".claude/agents/symfony-implementer.md",
+              ".claude/agents/symfony-code-reviewer.md",
+              ".claude/commands/symfony-functional-tests.md",
+              ".claude/commands/symfony-doctrine-relations.md",
+              ".claude/commands/symfony-api-resources.md",
+              ".claude/commands/symfony-messenger.md",
+              ".claude/commands/symfony-voters.md",
+              ".claude/commands/symfony-check.md",
+              ".claude/skills/symfony-runner-selection/SKILL.md",
+              ".claude/skills/symfony-functional-tests/SKILL.md",
+              ".claude/skills/symfony-doctrine-relations/SKILL.md",
+              ".claude/skills/symfony-api-platform-resources/SKILL.md",
+              ".claude/skills/symfony-messenger/SKILL.md",
+              ".claude/skills/symfony-voters/SKILL.md"
+            ],
+            "opencode": [
+              ".github/instructions/symfony.instructions.md",
+              ".github/instructions/symfony-testing.instructions.md",
+              ".github/agents/symfony-research-planner.agent.md",
+              ".github/agents/symfony-implementer.agent.md",
+              ".github/agents/symfony-code-reviewer.agent.md",
+              ".opencode/agents/symfony-research-planner.md",
+              ".opencode/agents/symfony-implementer.md",
+              ".opencode/agents/symfony-code-reviewer.md"
+            ]
+          }
         },
         "laravel": {
           "label": "Laravel",
@@ -130,11 +216,21 @@
           ".github/agents/javascript-code-reviewer.agent.md"
         ],
         "claude": [
+          ".github/instructions/javascript.instructions.md",
+          ".github/instructions/javascript-testing.instructions.md",
+          ".github/agents/javascript-research-planner.agent.md",
+          ".github/agents/javascript-implementer.agent.md",
+          ".github/agents/javascript-code-reviewer.agent.md",
           ".claude/agents/javascript-research-planner.md",
           ".claude/agents/javascript-implementer.md",
           ".claude/agents/javascript-code-reviewer.md"
         ],
         "opencode": [
+          ".github/instructions/javascript.instructions.md",
+          ".github/instructions/javascript-testing.instructions.md",
+          ".github/agents/javascript-research-planner.agent.md",
+          ".github/agents/javascript-implementer.agent.md",
+          ".github/agents/javascript-code-reviewer.agent.md",
           ".opencode/agents/javascript-research-planner.md",
           ".opencode/agents/javascript-implementer.md",
           ".opencode/agents/javascript-code-reviewer.md"

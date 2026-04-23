@@ -14,7 +14,7 @@ Use when the user asks to:
 
 - "build / implement / deliver [feature]"
 - "fix [bug] end-to-end"
-- "take this Jira / issue to done"
+- "take this ticket / issue to done"
 - "refactor X with tests and review"
 
 Do not use for:
