@@ -1,0 +1,15 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    ".github/instructions/code-quality.instructions.md",
+    ".github/instructions/testing.instructions.md",
+    ".github/instructions/security.instructions.md",
+    ".github/instructions/git-workflow.instructions.md",
+    ".github/instructions/orchestration-loop.instructions.md",
+    ".github/instructions/agent-skills-best-practices.instructions.md",
+    ".github/instructions/php.instructions.md",
+    ".github/instructions/php-testing.instructions.md",
+    ".github/instructions/javascript.instructions.md",
+    ".github/instructions/javascript-testing.instructions.md"
+  ]
+}
