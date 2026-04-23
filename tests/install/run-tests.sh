@@ -105,6 +105,34 @@ test_agent_filtering() {
   rm -rf "$dest"
 }
 
+test_opencode_skill_install() {
+  local name="opencode selection installs shared skills via claude compatibility"
+  local dest; dest=$(mktmp)
+  local command
+  bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=opencode --languages=php --non-interactive >/dev/null 2>&1
+  local commands_ok=1
+  for command in fix-issue generate-unit-test implement-feature plan-feature refactor review-code; do
+    if [ ! -f "${dest}/.opencode/commands/${command}.md" ]; then
+      commands_ok=0
+      break
+    fi
+  done
+  if [ -f "${dest}/.opencode/agents/orchestrator.md" ] \
+      && [ "$commands_ok" = "1" ] \
+      && [ -f "${dest}/.claude/skills/orchestration-loop/SKILL.md" ] \
+      && [ -f "${dest}/.claude/skills/code-review/references/verdict-template.md" ] \
+      && [ -f "${dest}/.claude/skills/quality-gates/assets/report-template.md" ] \
+      && [ -f "${dest}/.claude/skills/research-planning/references/brief-template.md" ] \
+      && [ -f "${dest}/.github/skills/quality-gates/assets/report-template.md" ] \
+      && [ ! -f "${dest}/CLAUDE.md" ]; then
+    pass "$name"
+  else
+    fail "$name" "expected skill compatibility assets missing"
+  fi
+  rm -rf "$dest"
+}
+
 # -----------------------------------------------------------------------------
 # 5. --skip-existing leaves existing files untouched.
 # -----------------------------------------------------------------------------
@@ -270,11 +298,21 @@ test_symfony_framework_install_claude() {
 test_symfony_framework_install_opencode() {
   local name="symfony framework installs optional opencode assets"
   local dest; dest=$(mktmp)
+  local command
   if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
       --agents=opencode --languages=php --frameworks='php:symfony' --non-interactive >/dev/null 2>&1; then
+    local commands_ok=1
+    for command in symfony-functional-tests symfony-doctrine-relations symfony-api-resources symfony-messenger symfony-voters symfony-check; do
+      if [ ! -f "${dest}/.opencode/commands/${command}.md" ]; then
+        commands_ok=0
+        break
+      fi
+    done
     if [ -f "${dest}/.opencode/agents/symfony-implementer.md" ] \
+        && [ "$commands_ok" = "1" ] \
         && [ -f "${dest}/.github/agents/symfony-implementer.agent.md" ] \
         && [ -f "${dest}/.github/instructions/symfony.instructions.md" ] \
+        && [ -f "${dest}/.claude/skills/symfony-functional-tests/SKILL.md" ] \
         && jq -e '.instructions | index(".github/instructions/symfony.instructions.md")' "${dest}/opencode.json" >/dev/null 2>&1 \
         && jq -e '.instructions | index(".github/instructions/symfony-testing.instructions.md")' "${dest}/opencode.json" >/dev/null 2>&1; then
       pass "$name"
@@ -340,6 +378,7 @@ main() {
   test_basic_install
   test_language_filtering
   test_agent_filtering
+  test_opencode_skill_install
   test_skip_existing
   test_force
   test_dry_run

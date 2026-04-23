@@ -97,7 +97,8 @@ Placeholders with empty `files` / `files_by_agent: {}` are fine — they reserve
 ```
 .github/     GitHub Copilot agents, instructions, prompts, skills
 .claude/     Claude Code adapters (thin wrappers pointing at .github/agents/)
-.opencode/   OpenCode adapters (same pattern)
+.opencode/   OpenCode adapters (agents, commands)
+doc/         Reference notes for Copilot, VS Code, Claude Code, OpenCode
 AGENTS.md    Cross-tool baseline (loaded by all three tools)
 CLAUDE.md    Claude Code memory entry
 opencode.json OpenCode config (instruction file list)
@@ -115,3 +116,13 @@ bash tests/install/run-tests.sh
 ```
 
 The test suite runs offline using `--source=.` and `--manifest=./manifest.json`.
+
+## Reference documentation
+
+The `doc/` directory contains research notes and adaptation guidance for:
+
+- GitHub Copilot
+- GitHub Copilot for VS Code
+- Claude Code
+- OpenCode
+- Cross-tool agent adaptation
