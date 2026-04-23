@@ -1,10 +1,11 @@
 # AGENTS.md
 
-Top-level agent catalog. This file is the canonical **rules file for OpenCode and Codex**, an **always-on instructions source for GitHub Copilot**, and is imported by `CLAUDE.md` for Claude Code. All four toolchains consume it directly or through a thin adapter.
+Top-level agent catalog. This file is the canonical cross-tool baseline: an official **rules file for OpenCode, Cursor, and Codex**, an **always-on instructions source for GitHub Copilot**, and a source imported by `CLAUDE.md` for Claude Code.
 
 > Tool-specific adapters live in:
 > - [.github/](.github/) — GitHub Copilot (VS Code) native format.
 > - [.claude/](.claude/) — Claude Code native format.
+> - [.cursor/](.cursor/) — Cursor-native project rules that point to canonical instructions.
 > - [.opencode/](.opencode/) — OpenCode native format.
 > - [.codex/](.codex/) — Codex native custom agents.
 > - [.agents/](.agents/) — Codex-native skill discovery wrappers.
@@ -55,7 +56,7 @@ When the installer includes `php:symfony`, the workspace also gains `symfony-res
 | `javascript-implementer` | Implements TS/JS following module & component conventions. |
 | `javascript-code-reviewer` | TS strictness, component architecture, hooks/composables, accessibility. |
 
-Canonical bodies for each agent live in [.github/agents/](.github/agents/). Claude Code, OpenCode, and Codex wrappers delegate to those bodies instead of duplicating behavior.
+Canonical bodies for each agent live in [.github/agents/](.github/agents/). Claude Code and OpenCode wrappers delegate to those bodies via `Read` on session start. Cursor does not currently have a documented equivalent repository file format for custom agents, so its adaptation layer uses `AGENTS.md`, `.cursor/rules/`, and shared skills instead. Codex uses `.codex/agents/` wrappers that read the canonical body rather than duplicating it.
 
 ## Canonical workflow
 
@@ -67,7 +68,7 @@ Documented in [.github/instructions/orchestration-loop.instructions.md](.github/
 
 ## Skills quick index
 
-Canonical skills in [.github/skills/](.github/skills/), mirrored to [.claude/skills/](.claude/skills/) and projected through [.agents/skills/](.agents/skills/) so Claude Code, OpenCode, and Codex discover them through their supported locations.
+Canonical skills in [.github/skills/](.github/skills/), mirrored to [.claude/skills/](.claude/skills/) so Claude Code, OpenCode, and Cursor can discover them through their documented compatibility paths, and projected through [.agents/skills/](.agents/skills/) so Codex can discover them through its native repository path.
 
 | Skill | Purpose |
 |-------|---------|
@@ -92,7 +93,7 @@ Canonical instruction files live in [.github/instructions/](.github/instructions
 - `symfony.instructions.md`, `symfony-testing.instructions.md` — optional Symfony layer, installed only when `php:symfony` is selected.
 - `javascript.instructions.md`, `javascript-testing.instructions.md` — TS strict, Vitest/Jest, MSW.
 
-OpenCode loads these via the `instructions` field in [opencode.json](opencode.json). Claude Code loads them via `@`-imports in [CLAUDE.md](CLAUDE.md). GitHub Copilot activates them automatically per the `applyTo` glob. Codex reads this file directly and uses `.codex/agents/` plus `.agents/skills/` as its native projections.
+OpenCode loads these via the `instructions` field in [opencode.json](opencode.json). Claude Code loads them via `@`-imports in [CLAUDE.md](CLAUDE.md). GitHub Copilot activates them automatically per the `applyTo` glob. Cursor maps them through thin `.cursor/rules/*.mdc` wrappers that point back to the canonical instruction files. Codex reads this file directly and uses `.codex/agents/` plus `.agents/skills/` as its native projections.
 
 ## Language and style
 

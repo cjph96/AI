@@ -1,0 +1,10 @@
+---
+description: Apply the repository orchestration-loop contract when editing agent definitions.
+globs:
+  - "**/*.agent.md"
+  - "**/*.chatmode.md"
+---
+
+When this rule matches, read and follow `.github/instructions/orchestration-loop.instructions.md`.
+
+Use that file as the canonical source for the planner, implementer, reviewer, and report loop.

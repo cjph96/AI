@@ -1,0 +1,10 @@
+---
+description: Apply the repository PHPUnit testing conventions.
+globs:
+  - "**/*Test.php"
+  - "**/tests/**/*.php"
+---
+
+When this rule matches, read and follow `.github/instructions/php-testing.instructions.md`.
+
+Use that file as the canonical source for PHPUnit layers, naming, helpers, fixtures, and mocking.

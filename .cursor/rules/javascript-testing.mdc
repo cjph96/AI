@@ -1,0 +1,10 @@
+---
+description: Apply the repository JavaScript and TypeScript testing conventions.
+globs:
+  - "**/*.{test,spec}.{ts,tsx,js,jsx,mjs,cjs}"
+  - "**/__tests__/**/*.{ts,tsx,js,jsx}"
+---
+
+When this rule matches, read and follow `.github/instructions/javascript-testing.instructions.md`.
+
+Use that file as the canonical source for JS and TS test structure, mocking, component tests, and e2e expectations.

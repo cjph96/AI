@@ -1,0 +1,13 @@
+---
+description: Apply the repository Symfony conventions when working in a Symfony codebase.
+globs:
+  - "**/*.php"
+  - "config/**/*.yaml"
+  - "config/**/*.yml"
+  - "templates/**/*.twig"
+  - "composer.json"
+---
+
+When this rule matches, read and follow `.github/instructions/symfony.instructions.md`.
+
+Use that file as the canonical source for Symfony layering, framework integrations, and configuration expectations.

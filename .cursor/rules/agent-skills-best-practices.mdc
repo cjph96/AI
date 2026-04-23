@@ -1,0 +1,14 @@
+---
+description: Apply the repository skill authoring standard when editing skill files.
+globs:
+  - ".github/skills/**/SKILL.md"
+  - ".github/skills/**/references/**"
+  - ".github/skills/**/assets/**"
+  - ".claude/skills/**/SKILL.md"
+  - ".claude/skills/**/references/**"
+  - ".claude/skills/**/assets/**"
+---
+
+When this rule matches, read and follow `.github/instructions/agent-skills-best-practices.instructions.md`.
+
+Use that file as the canonical source for skill scope, progressive disclosure, frontmatter, references, and assets.

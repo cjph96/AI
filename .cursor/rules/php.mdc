@@ -1,0 +1,9 @@
+---
+description: Apply the repository PHP coding standards.
+globs:
+  - "**/*.php"
+---
+
+When this rule matches, read and follow `.github/instructions/php.instructions.md`.
+
+Use that file as the canonical source for PHP 8.x standards and DDD-CQRS conventions when present.

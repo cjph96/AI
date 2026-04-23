@@ -1,0 +1,12 @@
+---
+description: Apply the repository generic testing policy when editing tests.
+globs:
+  - "**/*.{test,spec}.{ts,tsx,js,jsx,mjs,cjs}"
+  - "**/tests/**/*"
+  - "**/Test*.php"
+  - "**/*Test.php"
+---
+
+When this rule matches, read and follow `.github/instructions/testing.instructions.md`.
+
+Use that file as the canonical source for test structure, isolation, naming, layering, and mocking policy.

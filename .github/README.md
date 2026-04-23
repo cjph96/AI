@@ -1,8 +1,8 @@
 # AI Agent Orchestration Kit
 
-This folder contains the **GitHub Copilot (VS Code)** adapters for a portable agent orchestration system. The same agent definitions are mirrored to [`.claude/`](../.claude/) for Claude Code and [`.opencode/`](../.opencode/) for OpenCode.
+This folder contains the **GitHub Copilot (VS Code)** adapters for a portable agent orchestration system. The same workflow is adapted to [`.claude/`](../.claude/) for Claude Code, [`.opencode/`](../.opencode/) for OpenCode, [`.cursor/`](../.cursor/) for Cursor, and [`.codex/`](../.codex/) plus [`.agents/`](../.agents/) for Codex.
 
-Top-level rules live in the repo-root [`AGENTS.md`](../AGENTS.md) (consumed by Copilot, Claude and OpenCode) and [`CLAUDE.md`](../CLAUDE.md) (imports AGENTS.md + scoped instruction files for Claude).
+Top-level rules live in the repo-root [`AGENTS.md`](../AGENTS.md) (consumed directly by OpenCode, Cursor, and Codex and compatible with Copilot) and [`CLAUDE.md`](../CLAUDE.md) (imports AGENTS.md + scoped instruction files for Claude).
 
 ## Core pattern: Orchestrator + Specialist Subagents
 
