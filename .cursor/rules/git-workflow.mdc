@@ -1,0 +1,8 @@
+---
+description: Apply the repository git workflow and PR policy.
+alwaysApply: true
+---
+
+Read and follow `.github/instructions/git-workflow.instructions.md`.
+
+Use it as the canonical source for branching, commit format, pull-request etiquette, and destructive-command restrictions.

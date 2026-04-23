@@ -1,6 +1,6 @@
 # AI agent orchestration kit
 
-A portable set of agents, skills, instructions and prompts that give **GitHub Copilot**, **Claude Code** and **OpenCode** a consistent *research → plan → implement → review* workflow.
+A portable set of agents, skills, instructions and prompts that give **GitHub Copilot**, **Claude Code**, **OpenCode**, and **Cursor** a consistent *research → plan → implement → review* workflow.
 
 The repository is the single source of truth. The [`install.sh`](install.sh) script copies a selected subset into any other project.
 
@@ -14,7 +14,7 @@ curl -fsSL https://raw.githubusercontent.com/cristianperez/AI/main/install.sh | 
 
 The script asks interactively for:
 
-1. **Agents** — GitHub Copilot, Claude Code, OpenCode (multi-select, at least one).
+1. **Agents** — GitHub Copilot, Claude Code, OpenCode, Cursor (multi-select, at least one).
 2. **Languages** — PHP, JavaScript/TypeScript.
 3. **Frameworks** per selected language (Symfony/Laravel for PHP; Vue/React/Vanilla for JS).
 4. **Technologies** — PostgreSQL, Redis, AWS SQS.
@@ -97,9 +97,10 @@ Placeholders with empty `files` / `files_by_agent: {}` are fine — they reserve
 ```
 .github/     GitHub Copilot agents, instructions, prompts, skills
 .claude/     Claude Code adapters (thin wrappers pointing at .github/agents/)
+.cursor/     Cursor project rules that point to canonical instructions
 .opencode/   OpenCode adapters (agents, commands)
-doc/         Reference notes for Copilot, VS Code, Claude Code, OpenCode
-AGENTS.md    Cross-tool baseline (loaded by all three tools)
+doc/         Reference notes for Copilot, VS Code, Claude Code, OpenCode, Cursor
+AGENTS.md    Cross-tool baseline (loaded directly by OpenCode and Cursor, compatible with Copilot)
 CLAUDE.md    Claude Code memory entry
 opencode.json OpenCode config (instruction file list)
 manifest.json Installer catalog (selection → files to copy)
@@ -125,4 +126,5 @@ The `doc/` directory contains research notes and adaptation guidance for:
 - GitHub Copilot for VS Code
 - Claude Code
 - OpenCode
+- Cursor
 - Cross-tool agent adaptation

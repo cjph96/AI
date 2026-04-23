@@ -6,7 +6,7 @@ Keep this file ≤ 2 pages and task-agnostic. Language-, framework- or path-spec
 
 ## What this repository is
 
-A **multi-tool agent orchestration kit**. It defines a consistent research → plan → implement → review → report workflow that works across **GitHub Copilot (VS Code)**, **Claude Code** and **OpenCode**. There is no application code in this repo — only agent definitions, instructions, prompts and skills.
+A **multi-tool agent orchestration kit**. It defines a consistent research → plan → implement → review → report workflow that works across **GitHub Copilot (VS Code)**, **Claude Code**, **OpenCode**, and **Cursor**. There is no application code in this repo — only agent definitions, instructions, prompts and skills.
 
 Top-level entry point for humans: [README.md](../README.md). Top-level entry point for agents: [AGENTS.md](../AGENTS.md).
 
@@ -27,8 +27,9 @@ Top-level entry point for humans: [README.md](../README.md). Top-level entry poi
   skills/       — reusable SKILL.md playbooks with progressive disclosure
   copilot-instructions.md — this file
 .claude/        — Claude Code adapters (same content, Claude format)
+.cursor/        — Cursor-native rules that point to canonical instructions
 .opencode/      — OpenCode adapters (same content, OpenCode format)
-AGENTS.md       — cross-tool rules (also consumed by Copilot and OpenCode)
+AGENTS.md       — cross-tool rules (also consumed by Copilot, OpenCode, and Cursor)
 CLAUDE.md       — Claude memory entry (imports AGENTS.md + instructions)
 opencode.json   — OpenCode config (declares instruction file paths)
 ```

@@ -1,0 +1,10 @@
+---
+description: Apply the repository Symfony testing conventions.
+globs:
+  - "**/*Test.php"
+  - "**/tests/**/*.php"
+---
+
+When this rule matches, read and follow `.github/instructions/symfony-testing.instructions.md`.
+
+Use that file as the canonical source for Symfony functional tests, fixtures, Messenger, and security-related testing.

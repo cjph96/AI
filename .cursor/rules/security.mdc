@@ -1,0 +1,9 @@
+---
+description: Apply the repository security baseline when editing source files.
+globs:
+  - "**/*.{ts,tsx,js,jsx,vue,mjs,cjs,php,py,go,rs,java,kt,rb,swift,cs,cpp,c,h,hpp,scala,sh,bash,zsh}"
+---
+
+When this rule matches, read and follow `.github/instructions/security.instructions.md`.
+
+Use that file as the canonical source for input validation, secrets, authorization, injection defenses, logging, and HTTP hardening.

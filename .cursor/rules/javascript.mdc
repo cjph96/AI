@@ -1,0 +1,9 @@
+---
+description: Apply the repository JavaScript and TypeScript coding standards.
+globs:
+  - "**/*.{ts,tsx,js,jsx,mjs,cjs,vue}"
+---
+
+When this rule matches, read and follow `.github/instructions/javascript.instructions.md`.
+
+Use that file as the canonical source for JS and TS implementation standards, typing, modules, and component conventions.

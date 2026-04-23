@@ -122,6 +122,47 @@
         ".opencode/commands/refactor.md",
         ".opencode/commands/review-code.md"
       ]
+    },
+    "cursor": {
+      "label": "Cursor",
+      "files": [
+        ".github/instructions/code-quality.instructions.md",
+        ".github/instructions/testing.instructions.md",
+        ".github/instructions/security.instructions.md",
+        ".github/instructions/git-workflow.instructions.md",
+        ".github/instructions/orchestration-loop.instructions.md",
+        ".github/instructions/agent-skills-best-practices.instructions.md",
+        ".github/agents/orchestrator.agent.md",
+        ".github/agents/research-planner.agent.md",
+        ".github/agents/implementer.agent.md",
+        ".github/agents/code-reviewer.agent.md",
+        ".github/agents/test-reviewer.agent.md",
+        ".github/agents/qa-tester.agent.md",
+        ".github/skills/code-review/SKILL.md",
+        ".github/skills/code-review/references/verdict-template.md",
+        ".github/skills/debugging/SKILL.md",
+        ".github/skills/orchestration-loop/SKILL.md",
+        ".github/skills/quality-gates/SKILL.md",
+        ".github/skills/quality-gates/assets/report-template.md",
+        ".github/skills/research-planning/SKILL.md",
+        ".github/skills/research-planning/references/brief-template.md",
+        ".github/skills/test-driven-development/SKILL.md",
+        ".claude/skills/code-review/SKILL.md",
+        ".claude/skills/code-review/references/verdict-template.md",
+        ".claude/skills/debugging/SKILL.md",
+        ".claude/skills/orchestration-loop/SKILL.md",
+        ".claude/skills/quality-gates/SKILL.md",
+        ".claude/skills/quality-gates/assets/report-template.md",
+        ".claude/skills/research-planning/SKILL.md",
+        ".claude/skills/research-planning/references/brief-template.md",
+        ".claude/skills/test-driven-development/SKILL.md",
+        ".cursor/rules/agent-skills-best-practices.mdc",
+        ".cursor/rules/code-quality.mdc",
+        ".cursor/rules/git-workflow.mdc",
+        ".cursor/rules/orchestration-loop.mdc",
+        ".cursor/rules/security.mdc",
+        ".cursor/rules/testing.mdc"
+      ]
     }
   },
   "languages": {
@@ -154,6 +195,15 @@
           ".opencode/agents/php-research-planner.md",
           ".opencode/agents/php-implementer.md",
           ".opencode/agents/php-code-reviewer.md"
+        ],
+        "cursor": [
+          ".github/instructions/php.instructions.md",
+          ".github/instructions/php-testing.instructions.md",
+          ".github/agents/php-research-planner.agent.md",
+          ".github/agents/php-implementer.agent.md",
+          ".github/agents/php-code-reviewer.agent.md",
+          ".cursor/rules/php.mdc",
+          ".cursor/rules/php-testing.mdc"
         ]
       },
       "frameworks": {
@@ -226,6 +276,21 @@
               ".opencode/commands/symfony-messenger.md",
               ".opencode/commands/symfony-voters.md",
               ".opencode/commands/symfony-check.md"
+            ],
+            "cursor": [
+              ".github/instructions/symfony.instructions.md",
+              ".github/instructions/symfony-testing.instructions.md",
+              ".github/agents/symfony-research-planner.agent.md",
+              ".github/agents/symfony-implementer.agent.md",
+              ".github/agents/symfony-code-reviewer.agent.md",
+              ".claude/skills/symfony-runner-selection/SKILL.md",
+              ".claude/skills/symfony-functional-tests/SKILL.md",
+              ".claude/skills/symfony-doctrine-relations/SKILL.md",
+              ".claude/skills/symfony-api-platform-resources/SKILL.md",
+              ".claude/skills/symfony-messenger/SKILL.md",
+              ".claude/skills/symfony-voters/SKILL.md",
+              ".cursor/rules/symfony.mdc",
+              ".cursor/rules/symfony-testing.mdc"
             ]
           }
         },
@@ -264,6 +329,15 @@
           ".opencode/agents/javascript-research-planner.md",
           ".opencode/agents/javascript-implementer.md",
           ".opencode/agents/javascript-code-reviewer.md"
+        ],
+        "cursor": [
+          ".github/instructions/javascript.instructions.md",
+          ".github/instructions/javascript-testing.instructions.md",
+          ".github/agents/javascript-research-planner.agent.md",
+          ".github/agents/javascript-implementer.agent.md",
+          ".github/agents/javascript-code-reviewer.agent.md",
+          ".cursor/rules/javascript.mdc",
+          ".cursor/rules/javascript-testing.mdc"
         ]
       },
       "frameworks": {
