@@ -19,7 +19,7 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 
 # Repository coordinates. Override via AI_TOOLS_REPO env var or --repo flag.
-DEFAULT_REPO="${AI_TOOLS_REPO:-cristianperez/AI}"
+DEFAULT_REPO="${AI_TOOLS_REPO:-cjph96/AI}"
 DEFAULT_REF="${AI_TOOLS_REF:-main}"
 
 REPO=""

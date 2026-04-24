@@ -681,6 +681,70 @@ test_non_interactive_requires_agents() {
 }
 
 # -----------------------------------------------------------------------------
+# 12b. Default remote repo matches the canonical origin when --repo is omitted.
+# -----------------------------------------------------------------------------
+test_default_repo_download_source() {
+  local name="default repo downloads manifest from canonical origin"
+  local tmp dest fake_bin curl_log
+  tmp=$(mktmp)
+  dest=$(mktmp)
+  fake_bin="${tmp}/bin"
+  curl_log="${tmp}/curl-url.txt"
+  mkdir -p "$fake_bin"
+
+  cat > "${fake_bin}/curl" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+
+out=""
+url=""
+while [ "\$#" -gt 0 ]; do
+  case "\$1" in
+    -o)
+      out="\$2"
+      shift 2
+      ;;
+    http://*|https://*)
+      url="\$1"
+      shift
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+if [ "\${url##*/}" = "manifest.json" ]; then
+  printf '%s' "\$url" > "$curl_log"
+fi
+
+if [ -n "\$out" ]; then
+  cat > "\$out" <<'JSON'
+{
+  "version": "0.0.0",
+  "base": { "files": ["AGENTS.md"] },
+  "agents": {
+    "x": { "label": "X", "files": [] }
+  },
+  "languages": {},
+  "technologies": {}
+}
+JSON
+fi
+EOF
+  chmod +x "${fake_bin}/curl"
+
+  if PATH="${fake_bin}:$PATH" bash "$INSTALLER" --dest="$dest" --agents=x --non-interactive >/dev/null 2>&1 \
+      && [ "$(cat "$curl_log")" = "https://raw.githubusercontent.com/cjph96/AI/main/manifest.json" ]; then
+    pass "$name"
+  else
+    fail "$name" "unexpected manifest source: $(cat "$curl_log" 2>/dev/null || echo '<missing>')"
+  fi
+
+  rm -rf "$tmp" "$dest"
+}
+
+# -----------------------------------------------------------------------------
 # 12. Symfony framework selection installs only the Symfony-specific assets.
 # -----------------------------------------------------------------------------
 test_symfony_framework_install_copilot() {
@@ -892,6 +956,7 @@ main() {
   test_unknown_agent
   test_conflicting_flags
   test_non_interactive_requires_agents
+  test_default_repo_download_source
   test_symfony_framework_install_copilot
   test_symfony_framework_install_claude
   test_symfony_framework_install_opencode
