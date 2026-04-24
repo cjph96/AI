@@ -6,7 +6,9 @@ Produce a planning brief for: $ARGUMENTS.
 
 Use the appropriate planner for the stack:
 - If the change is clearly PHP-only, invoke @php-research-planner.
-- If the change is clearly JS/TS-only, invoke @javascript-research-planner.
+- If the change is clearly JS/TS-only, invoke @javascript-research-planner and expect React/Vue work to use the matching framework skill.
+- If the change is clearly Python-only, invoke @python-research-planner.
+- If the change is clearly Go-only, invoke @go-research-planner.
 - Otherwise invoke @research-planner.
 
 Constraints:

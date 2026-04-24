@@ -6,7 +6,9 @@ Review the change: $ARGUMENTS.
 
 Use the appropriate reviewer for the stack:
 - If the diff is clearly PHP-only, invoke @php-code-reviewer.
-- If the diff is clearly JS/TS-only, invoke @javascript-code-reviewer.
+- If the diff is clearly JS/TS-only, invoke @javascript-code-reviewer and expect React/Vue work to use the matching framework skill.
+- If the diff is clearly Python-only, invoke @python-code-reviewer.
+- If the diff is clearly Go-only, invoke @go-code-reviewer.
 - Otherwise invoke @code-reviewer.
 
 Constraints:

@@ -21,7 +21,7 @@ The script asks interactively for:
 
 Only the files mapped in [`manifest.json`](manifest.json) for the selected combination are copied. Framework add-ons stay optional: for example, selecting `php:symfony` installs Symfony-specific instructions, specialist agents, skills, and slash-command surfaces, while plain `php` does not.
 
-Selecting `php` now also installs the base PHP skills for foundations, package selection, and quality tooling. Selecting `php:laravel` adds a Laravel-first package selection skill on top of the base PHP surface.
+Selecting `php` now also installs the base PHP skills for foundations, package selection, and quality tooling. Selecting `javascript` installs the base JavaScript skills for foundations, package selection, and quality tooling. Selecting `javascript:react` or `javascript:vue` adds the matching framework-specific skills and reference notes on top of that base surface. Selecting `php:laravel` adds a Laravel-first package selection skill on top of the base PHP surface.
 
 ### Requirements
 
@@ -137,6 +137,12 @@ The test suite runs offline using `--source=.` and `--manifest=./manifest.json`.
 The `doc/` directory contains research notes and adaptation guidance for:
 
 - PHP foundations and standards
+- JavaScript foundations and modern language posture
+- TypeScript strictness and runtime validation
+- React ecosystem guidance
+- Vue ecosystem guidance
+- JavaScript tooling and testing workflow
+- JavaScript architecture and performance posture
 - Symfony
 - Laravel
 - PHP ecosystem packages

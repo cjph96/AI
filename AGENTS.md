@@ -93,6 +93,11 @@ Canonical skills in [.github/skills/](.github/skills/), mirrored to [.claude/ski
 | `orchestration-loop` | Runs the research-implement-review loop end-to-end. |
 | `research-planning` | Produces a structured planning brief. |
 | `skill-selection` | Chooses the smallest applicable skill or skill sequence before execution. |
+| `javascript-foundations` | Applies modern JS/TS defaults for modules, state, and boundary-safe typing. |
+| `javascript-package-selection` | Chooses JS/TS ecosystem dependencies with React/Vue/Vite-aware tradeoffs. |
+| `javascript-quality-tooling` | Structures lint, typecheck, test, e2e, and build workflows for JS/TS repos. |
+| `javascript-react-foundations` | Applies React-specific component, hook, and state defaults after framework detection. |
+| `javascript-vue-foundations` | Applies Vue 3, Pinia, and Nuxt-specific component and composable defaults. |
 | `php-foundations` | Applies modern PHP 8.x standards, PSR alignment, and Composer-aware structure. |
 | `php-package-selection` | Chooses Composer dependencies with framework-aware tradeoffs. |
 | `php-quality-tooling` | Structures PHPUnit or Pest, PHPStan, PHP CS Fixer, and Rector workflows. |

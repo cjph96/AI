@@ -13,5 +13,7 @@ Constraints:
 Delegate to:
 - `code-reviewer` by default.
 - `php-code-reviewer` for PHP-only diffs.
-- `javascript-code-reviewer` for JS/TS-only diffs.
+- `javascript-code-reviewer` for JS/TS-only diffs. When the diff is React or Vue specific, expect it to apply the matching framework skill.
+- `python-code-reviewer` for Python-only diffs.
+- `go-code-reviewer` for Go-only diffs.
 - Add `test-reviewer` when the diff is mostly tests or touches test infrastructure.

@@ -38,6 +38,11 @@ Do not use when:
    - PHP standards / structure choice → `php-foundations`
    - PHP package choice → `php-package-selection`
    - PHP testing / analysis / modernization → `php-quality-tooling`
+   - JavaScript or TypeScript foundations / structure choice → `javascript-foundations`
+   - JavaScript or TypeScript dependency choice → `javascript-package-selection`
+   - JavaScript or TypeScript tooling / validation → `javascript-quality-tooling`
+   - React component, hook, context, routing, or state architecture → base JS route + `javascript-react-foundations`
+   - Vue 3 component, composable, Pinia, or Nuxt architecture → base JS route + `javascript-vue-foundations`
    - Laravel package or feature choice → `laravel-package-selection`
    - review only → `code-review`
    - planning only → `research-planning`
@@ -56,6 +61,11 @@ Do not use when:
 | PHP foundations or structure | `php-foundations` |
 | PHP dependency choice | `php-package-selection` |
 | PHP tooling or modernization | `php-quality-tooling` |
+| JavaScript / TypeScript foundations or structure | `javascript-foundations` |
+| JavaScript / TypeScript dependency choice | `javascript-package-selection` |
+| JavaScript / TypeScript tooling or validation | `javascript-quality-tooling` |
+| React component or hook architecture | base JS route + `javascript-react-foundations` |
+| Vue component or composable architecture | base JS route + `javascript-vue-foundations` |
 | Laravel package choice | `laravel-package-selection` |
 | Review a diff or PR | `code-review` |
 | Run lint, tests, build, or readiness checks | `quality-gates` |
@@ -75,6 +85,11 @@ Do not use when:
 
 - `.github/skills/orchestration-loop/SKILL.md`
 - `.github/skills/debugging/SKILL.md`
+- `.github/skills/javascript-foundations/SKILL.md`
+- `.github/skills/javascript-package-selection/SKILL.md`
+- `.github/skills/javascript-quality-tooling/SKILL.md`
+- `.github/skills/javascript-react-foundations/SKILL.md`
+- `.github/skills/javascript-vue-foundations/SKILL.md`
 - `.github/skills/php-foundations/SKILL.md`
 - `.github/skills/php-package-selection/SKILL.md`
 - `.github/skills/php-quality-tooling/SKILL.md`

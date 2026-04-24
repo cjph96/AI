@@ -57,6 +57,9 @@ test_basic_install() {
     [ -f "${dest}/.github/agents/orchestrator.agent.md" ] \
       && [ -f "${dest}/.github/instructions/php.instructions.md" ] \
       && [ -f "${dest}/.github/skills/php-foundations/SKILL.md" ] \
+      && [ -f "${dest}/.github/prompts/plan-feature.prompt.md" ] \
+      && [ -f "${dest}/.github/prompts/implement-feature.prompt.md" ] \
+      && [ -f "${dest}/.github/prompts/review-code.prompt.md" ] \
       && [ -f "${dest}/AGENTS.md" ] \
       && [ ! -d "${dest}/.claude" ] \
       && [ ! -d "${dest}/.opencode" ] \
@@ -76,11 +79,261 @@ test_language_filtering() {
   bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
       --agents=copilot --languages=javascript --non-interactive >/dev/null 2>&1
   if [ -f "${dest}/.github/instructions/javascript.instructions.md" ] \
+      && [ -f "${dest}/.github/agents/javascript-research-planner.agent.md" ] \
+      && [ -f "${dest}/.github/agents/javascript-implementer.agent.md" ] \
+      && [ -f "${dest}/.github/agents/javascript-code-reviewer.agent.md" ] \
+      && [ -f "${dest}/.github/skills/javascript-foundations/SKILL.md" ] \
+      && [ -f "${dest}/.github/skills/javascript-package-selection/SKILL.md" ] \
+      && [ -f "${dest}/.github/skills/javascript-quality-tooling/SKILL.md" ] \
+      && [ -f "${dest}/doc/javascript.md" ] \
+      && [ -f "${dest}/doc/typescript.md" ] \
+      && [ -f "${dest}/doc/javascript-tooling.md" ] \
+      && [ -f "${dest}/doc/javascript-architecture.md" ] \
+      && [ ! -f "${dest}/.github/skills/javascript-react-foundations/SKILL.md" ] \
+      && [ ! -f "${dest}/.github/skills/javascript-vue-foundations/SKILL.md" ] \
+      && [ ! -f "${dest}/doc/javascript-react.md" ] \
+      && [ ! -f "${dest}/doc/javascript-vue.md" ] \
       && [ ! -f "${dest}/.github/instructions/php.instructions.md" ] \
-      && [ ! -f "${dest}/.github/agents/php-research-planner.agent.md" ]; then
+      && [ ! -f "${dest}/.github/agents/php-research-planner.agent.md" ] \
+      && [ ! -f "${dest}/.github/skills/php-foundations/SKILL.md" ]; then
     pass "$name"
   else
     fail "$name" "php files leaked or js files missing"
+  fi
+  rm -rf "$dest"
+}
+
+test_javascript_framework_install_copilot() {
+  local name="react framework installs optional copilot assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=copilot --languages=javascript --frameworks='javascript:react' --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.github/skills/javascript-foundations/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/javascript-package-selection/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/javascript-quality-tooling/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/javascript-react-foundations/SKILL.md" ] \
+        && [ -f "${dest}/doc/javascript-react.md" ] \
+        && [ ! -f "${dest}/.github/skills/javascript-vue-foundations/SKILL.md" ] \
+        && [ ! -f "${dest}/doc/javascript-vue.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "react copilot assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
+test_javascript_framework_install_copilot_vue() {
+  local name="vue framework installs optional copilot assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=copilot --languages=javascript --frameworks='javascript:vue' --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.github/skills/javascript-foundations/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/javascript-package-selection/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/javascript-quality-tooling/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/javascript-vue-foundations/SKILL.md" ] \
+        && [ -f "${dest}/doc/javascript-vue.md" ] \
+        && [ ! -f "${dest}/.github/skills/javascript-react-foundations/SKILL.md" ] \
+        && [ ! -f "${dest}/doc/javascript-react.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "vue copilot assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
+test_javascript_framework_install_claude() {
+  local name="vue framework installs optional claude assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=claude --languages=javascript --frameworks='javascript:vue' --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.claude/skills/javascript-foundations/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-package-selection/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-quality-tooling/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-vue-foundations/SKILL.md" ] \
+        && [ -f "${dest}/doc/javascript-vue.md" ] \
+        && [ ! -f "${dest}/.claude/skills/javascript-react-foundations/SKILL.md" ] \
+        && [ ! -f "${dest}/doc/javascript-react.md" ] \
+        && [ -f "${dest}/.claude/agents/javascript-implementer.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "vue claude assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
+test_javascript_framework_install_claude_react() {
+  local name="react framework installs optional claude assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=claude --languages=javascript --frameworks='javascript:react' --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.claude/skills/javascript-foundations/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-package-selection/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-quality-tooling/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-react-foundations/SKILL.md" ] \
+        && [ -f "${dest}/doc/javascript-react.md" ] \
+        && [ ! -f "${dest}/.claude/skills/javascript-vue-foundations/SKILL.md" ] \
+        && [ ! -f "${dest}/doc/javascript-vue.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "react claude assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
+test_javascript_framework_install_opencode() {
+  local name="react framework installs optional opencode assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=opencode --languages=javascript --frameworks='javascript:react' --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.opencode/agents/javascript-implementer.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-foundations/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-package-selection/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-quality-tooling/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-react-foundations/SKILL.md" ] \
+        && [ -f "${dest}/doc/javascript-react.md" ] \
+        && [ ! -f "${dest}/.claude/skills/javascript-vue-foundations/SKILL.md" ] \
+        && [ ! -f "${dest}/doc/javascript-vue.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "react opencode assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
+test_javascript_framework_install_opencode_vue() {
+  local name="vue framework installs optional opencode assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=opencode --languages=javascript --frameworks='javascript:vue' --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.opencode/agents/javascript-implementer.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-foundations/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-package-selection/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-quality-tooling/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-vue-foundations/SKILL.md" ] \
+        && [ -f "${dest}/doc/javascript-vue.md" ] \
+        && [ ! -f "${dest}/.claude/skills/javascript-react-foundations/SKILL.md" ] \
+        && [ ! -f "${dest}/doc/javascript-react.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "vue opencode assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
+test_javascript_framework_install_cursor() {
+  local name="vue framework installs optional cursor assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=cursor --languages=javascript --frameworks='javascript:vue' --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.cursor/rules/javascript.mdc" ] \
+        && [ -f "${dest}/.cursor/rules/javascript-testing.mdc" ] \
+        && [ -f "${dest}/.claude/skills/javascript-foundations/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-package-selection/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-quality-tooling/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-vue-foundations/SKILL.md" ] \
+        && [ -f "${dest}/doc/javascript-vue.md" ] \
+        && [ ! -f "${dest}/.claude/skills/javascript-react-foundations/SKILL.md" ] \
+        && [ ! -f "${dest}/doc/javascript-react.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "vue cursor assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
+test_javascript_framework_install_cursor_react() {
+  local name="react framework installs optional cursor assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=cursor --languages=javascript --frameworks='javascript:react' --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.cursor/rules/javascript.mdc" ] \
+        && [ -f "${dest}/.cursor/rules/javascript-testing.mdc" ] \
+        && [ -f "${dest}/.claude/skills/javascript-foundations/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-package-selection/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-quality-tooling/SKILL.md" ] \
+        && [ -f "${dest}/.claude/skills/javascript-react-foundations/SKILL.md" ] \
+        && [ -f "${dest}/doc/javascript-react.md" ] \
+        && [ ! -f "${dest}/.claude/skills/javascript-vue-foundations/SKILL.md" ] \
+        && [ ! -f "${dest}/doc/javascript-vue.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "react cursor assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
+test_javascript_framework_install_codex() {
+  local name="react framework installs optional codex assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=codex --languages=javascript --frameworks='javascript:react' --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.github/skills/javascript-foundations/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/javascript-package-selection/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/javascript-quality-tooling/SKILL.md" ] \
+        && [ -f "${dest}/.agents/skills/javascript-foundations/SKILL.md" ] \
+        && [ -f "${dest}/.agents/skills/javascript-package-selection/SKILL.md" ] \
+        && [ -f "${dest}/.agents/skills/javascript-quality-tooling/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/javascript-react-foundations/SKILL.md" ] \
+        && [ -f "${dest}/.agents/skills/javascript-react-foundations/SKILL.md" ] \
+        && [ -f "${dest}/doc/javascript-react.md" ] \
+        && [ ! -f "${dest}/.agents/skills/javascript-vue-foundations/SKILL.md" ] \
+        && [ ! -f "${dest}/doc/javascript-vue.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "react codex assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
+  fi
+  rm -rf "$dest"
+}
+
+test_javascript_framework_install_codex_vue() {
+  local name="vue framework installs optional codex assets"
+  local dest; dest=$(mktmp)
+  if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=codex --languages=javascript --frameworks='javascript:vue' --non-interactive >/dev/null 2>&1; then
+    if [ -f "${dest}/.github/skills/javascript-foundations/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/javascript-package-selection/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/javascript-quality-tooling/SKILL.md" ] \
+        && [ -f "${dest}/.agents/skills/javascript-foundations/SKILL.md" ] \
+        && [ -f "${dest}/.agents/skills/javascript-package-selection/SKILL.md" ] \
+        && [ -f "${dest}/.agents/skills/javascript-quality-tooling/SKILL.md" ] \
+        && [ -f "${dest}/.github/skills/javascript-vue-foundations/SKILL.md" ] \
+        && [ -f "${dest}/.agents/skills/javascript-vue-foundations/SKILL.md" ] \
+        && [ -f "${dest}/doc/javascript-vue.md" ] \
+        && [ ! -f "${dest}/.agents/skills/javascript-react-foundations/SKILL.md" ] \
+        && [ ! -f "${dest}/doc/javascript-react.md" ]; then
+      pass "$name"
+    else
+      fail "$name" "vue codex assets missing"
+    fi
+  else
+    fail "$name" "installer exited non-zero"
   fi
   rm -rf "$dest"
 }
@@ -91,9 +344,13 @@ test_python_and_go_install() {
   if bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
       --agents=copilot --languages=python,go --non-interactive >/dev/null 2>&1; then
     if [ -f "${dest}/.github/instructions/python.instructions.md" ] \
+        && [ -f "${dest}/.github/agents/python-research-planner.agent.md" ] \
         && [ -f "${dest}/.github/agents/python-implementer.agent.md" ] \
+        && [ -f "${dest}/.github/agents/python-code-reviewer.agent.md" ] \
         && [ -f "${dest}/.github/instructions/go.instructions.md" ] \
+        && [ -f "${dest}/.github/agents/go-research-planner.agent.md" ] \
         && [ -f "${dest}/.github/agents/go-implementer.agent.md" ] \
+        && [ -f "${dest}/.github/agents/go-code-reviewer.agent.md" ] \
         && [ ! -f "${dest}/.github/instructions/php.instructions.md" ]; then
       pass "$name"
     else
@@ -116,6 +373,12 @@ test_agent_filtering() {
   if [ -d "${dest}/.claude/agents" ] \
       && [ -f "${dest}/CLAUDE.md" ] \
       && [ -f "${dest}/.claude/agents/php-implementer.md" ] \
+      && [ -f "${dest}/.claude/commands/fix-issue.md" ] \
+      && [ -f "${dest}/.claude/commands/generate-unit-test.md" ] \
+      && [ -f "${dest}/.claude/commands/implement-feature.md" ] \
+      && [ -f "${dest}/.claude/commands/plan-feature.md" ] \
+      && [ -f "${dest}/.claude/commands/refactor.md" ] \
+      && [ -f "${dest}/.claude/commands/review-code.md" ] \
       && [ -f "${dest}/.claude/skills/php-foundations/SKILL.md" ] \
       && [ -f "${dest}/.github/agents/php-implementer.agent.md" ] \
       && [ -f "${dest}/.github/instructions/php.instructions.md" ] \
@@ -125,6 +388,91 @@ test_agent_filtering() {
     fail "$name" "unexpected tree"
   fi
   rm -rf "$dest"
+}
+
+test_javascript_base_install_non_copilot() {
+  local name="javascript base install covers non-copilot adapters"
+  local claude_dest opencode_dest cursor_dest codex_dest ok
+  claude_dest=$(mktmp)
+  opencode_dest=$(mktmp)
+  cursor_dest=$(mktmp)
+  codex_dest=$(mktmp)
+  ok=1
+
+  bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$claude_dest" \
+      --agents=claude --languages=javascript --non-interactive >/dev/null 2>&1 || ok=0
+  bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$opencode_dest" \
+      --agents=opencode --languages=javascript --non-interactive >/dev/null 2>&1 || ok=0
+  bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$cursor_dest" \
+      --agents=cursor --languages=javascript --non-interactive >/dev/null 2>&1 || ok=0
+  bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$codex_dest" \
+      --agents=codex --languages=javascript --non-interactive >/dev/null 2>&1 || ok=0
+
+  if [ "$ok" = "1" ] \
+      && [ -f "${claude_dest}/.claude/agents/javascript-research-planner.md" ] \
+      && [ -f "${claude_dest}/.claude/agents/javascript-implementer.md" ] \
+      && [ -f "${claude_dest}/.claude/agents/javascript-code-reviewer.md" ] \
+      && [ -f "${claude_dest}/.claude/skills/javascript-foundations/SKILL.md" ] \
+      && [ -f "${claude_dest}/.claude/skills/javascript-package-selection/SKILL.md" ] \
+      && [ -f "${claude_dest}/.claude/skills/javascript-quality-tooling/SKILL.md" ] \
+      && [ -f "${claude_dest}/doc/javascript.md" ] \
+      && [ -f "${claude_dest}/doc/typescript.md" ] \
+      && [ -f "${claude_dest}/doc/javascript-tooling.md" ] \
+      && [ -f "${claude_dest}/doc/javascript-architecture.md" ] \
+      && [ ! -f "${claude_dest}/.claude/skills/javascript-react-foundations/SKILL.md" ] \
+      && [ ! -f "${claude_dest}/.claude/skills/javascript-vue-foundations/SKILL.md" ] \
+      && [ ! -f "${claude_dest}/doc/javascript-react.md" ] \
+      && [ ! -f "${claude_dest}/doc/javascript-vue.md" ] \
+      && [ -f "${opencode_dest}/.opencode/agents/javascript-research-planner.md" ] \
+      && [ -f "${opencode_dest}/.opencode/agents/javascript-implementer.md" ] \
+      && [ -f "${opencode_dest}/.opencode/agents/javascript-code-reviewer.md" ] \
+      && [ -f "${opencode_dest}/.claude/skills/javascript-foundations/SKILL.md" ] \
+      && [ -f "${opencode_dest}/.claude/skills/javascript-package-selection/SKILL.md" ] \
+      && [ -f "${opencode_dest}/.claude/skills/javascript-quality-tooling/SKILL.md" ] \
+      && [ -f "${opencode_dest}/doc/javascript.md" ] \
+      && [ -f "${opencode_dest}/doc/typescript.md" ] \
+      && [ -f "${opencode_dest}/doc/javascript-tooling.md" ] \
+      && [ -f "${opencode_dest}/doc/javascript-architecture.md" ] \
+      && [ ! -f "${opencode_dest}/.claude/skills/javascript-react-foundations/SKILL.md" ] \
+      && [ ! -f "${opencode_dest}/.claude/skills/javascript-vue-foundations/SKILL.md" ] \
+      && [ ! -f "${opencode_dest}/doc/javascript-react.md" ] \
+      && [ ! -f "${opencode_dest}/doc/javascript-vue.md" ] \
+      && [ -f "${cursor_dest}/.cursor/rules/javascript.mdc" ] \
+      && [ -f "${cursor_dest}/.cursor/rules/javascript-testing.mdc" ] \
+      && [ -f "${cursor_dest}/.claude/skills/javascript-foundations/SKILL.md" ] \
+      && [ -f "${cursor_dest}/.claude/skills/javascript-package-selection/SKILL.md" ] \
+      && [ -f "${cursor_dest}/.claude/skills/javascript-quality-tooling/SKILL.md" ] \
+      && [ -f "${cursor_dest}/doc/javascript.md" ] \
+      && [ -f "${cursor_dest}/doc/typescript.md" ] \
+      && [ -f "${cursor_dest}/doc/javascript-tooling.md" ] \
+      && [ -f "${cursor_dest}/doc/javascript-architecture.md" ] \
+      && [ ! -f "${cursor_dest}/.claude/skills/javascript-react-foundations/SKILL.md" ] \
+      && [ ! -f "${cursor_dest}/.claude/skills/javascript-vue-foundations/SKILL.md" ] \
+      && [ ! -f "${cursor_dest}/doc/javascript-react.md" ] \
+      && [ ! -f "${cursor_dest}/doc/javascript-vue.md" ] \
+      && [ -f "${codex_dest}/.codex/agents/javascript-research-planner.toml" ] \
+      && [ -f "${codex_dest}/.codex/agents/javascript-implementer.toml" ] \
+      && [ -f "${codex_dest}/.codex/agents/javascript-code-reviewer.toml" ] \
+      && [ -f "${codex_dest}/.github/skills/javascript-foundations/SKILL.md" ] \
+      && [ -f "${codex_dest}/.github/skills/javascript-package-selection/SKILL.md" ] \
+      && [ -f "${codex_dest}/.github/skills/javascript-quality-tooling/SKILL.md" ] \
+      && [ -f "${codex_dest}/.agents/skills/javascript-foundations/SKILL.md" ] \
+      && [ -f "${codex_dest}/.agents/skills/javascript-package-selection/SKILL.md" ] \
+      && [ -f "${codex_dest}/.agents/skills/javascript-quality-tooling/SKILL.md" ] \
+      && [ -f "${codex_dest}/doc/javascript.md" ] \
+      && [ -f "${codex_dest}/doc/typescript.md" ] \
+      && [ -f "${codex_dest}/doc/javascript-tooling.md" ] \
+      && [ -f "${codex_dest}/doc/javascript-architecture.md" ] \
+      && [ ! -f "${codex_dest}/.agents/skills/javascript-react-foundations/SKILL.md" ] \
+      && [ ! -f "${codex_dest}/.agents/skills/javascript-vue-foundations/SKILL.md" ] \
+      && [ ! -f "${codex_dest}/doc/javascript-react.md" ] \
+      && [ ! -f "${codex_dest}/doc/javascript-vue.md" ]; then
+    pass "$name"
+  else
+    fail "$name" "non-copilot javascript assets missing"
+  fi
+
+  rm -rf "$claude_dest" "$opencode_dest" "$cursor_dest" "$codex_dest"
 }
 
 test_opencode_skill_install() {
@@ -148,6 +496,7 @@ test_opencode_skill_install() {
       && [ -f "${dest}/.claude/skills/quality-gates/assets/report-template.md" ] \
       && [ -f "${dest}/.claude/skills/research-planning/references/brief-template.md" ] \
       && [ -f "${dest}/.github/skills/quality-gates/assets/report-template.md" ] \
+      && ! grep -Fq '.github/skills/' "${dest}/.claude/skills/skill-selection/SKILL.md" \
       && [ ! -f "${dest}/CLAUDE.md" ]; then
     pass "$name"
   else
@@ -167,6 +516,7 @@ test_cursor_install() {
         && [ -f "${dest}/.github/instructions/code-quality.instructions.md" ] \
         && [ -f "${dest}/.github/agents/orchestrator.agent.md" ] \
         && [ -f "${dest}/.claude/skills/orchestration-loop/SKILL.md" ] \
+        && ! grep -Fq '.github/skills/' "${dest}/.claude/skills/skill-selection/SKILL.md" \
         && [ -f "${dest}/AGENTS.md" ] \
         && [ ! -f "${dest}/CLAUDE.md" ] \
         && [ ! -d "${dest}/.opencode" ] \
@@ -519,8 +869,19 @@ main() {
   test_manifest_valid
   test_basic_install
   test_language_filtering
+  test_javascript_framework_install_copilot
+  test_javascript_framework_install_copilot_vue
+  test_javascript_framework_install_claude
+  test_javascript_framework_install_claude_react
+  test_javascript_framework_install_opencode
+  test_javascript_framework_install_opencode_vue
+  test_javascript_framework_install_cursor
+  test_javascript_framework_install_cursor_react
+  test_javascript_framework_install_codex
+  test_javascript_framework_install_codex_vue
   test_python_and_go_install
   test_agent_filtering
+  test_javascript_base_install_non_copilot
   test_opencode_skill_install
   test_cursor_install
   test_codex_install

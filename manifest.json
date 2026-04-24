@@ -431,7 +431,14 @@
           ".github/instructions/javascript-testing.instructions.md",
           ".github/agents/javascript-research-planner.agent.md",
           ".github/agents/javascript-implementer.agent.md",
-          ".github/agents/javascript-code-reviewer.agent.md"
+          ".github/agents/javascript-code-reviewer.agent.md",
+          ".github/skills/javascript-foundations/SKILL.md",
+          ".github/skills/javascript-package-selection/SKILL.md",
+          ".github/skills/javascript-quality-tooling/SKILL.md",
+          "doc/javascript.md",
+          "doc/typescript.md",
+          "doc/javascript-tooling.md",
+          "doc/javascript-architecture.md"
         ],
         "claude": [
           ".github/instructions/javascript.instructions.md",
@@ -441,7 +448,14 @@
           ".github/agents/javascript-code-reviewer.agent.md",
           ".claude/agents/javascript-research-planner.md",
           ".claude/agents/javascript-implementer.md",
-          ".claude/agents/javascript-code-reviewer.md"
+          ".claude/agents/javascript-code-reviewer.md",
+          ".claude/skills/javascript-foundations/SKILL.md",
+          ".claude/skills/javascript-package-selection/SKILL.md",
+          ".claude/skills/javascript-quality-tooling/SKILL.md",
+          "doc/javascript.md",
+          "doc/typescript.md",
+          "doc/javascript-tooling.md",
+          "doc/javascript-architecture.md"
         ],
         "opencode": [
           ".github/instructions/javascript.instructions.md",
@@ -451,7 +465,14 @@
           ".github/agents/javascript-code-reviewer.agent.md",
           ".opencode/agents/javascript-research-planner.md",
           ".opencode/agents/javascript-implementer.md",
-          ".opencode/agents/javascript-code-reviewer.md"
+          ".opencode/agents/javascript-code-reviewer.md",
+          ".claude/skills/javascript-foundations/SKILL.md",
+          ".claude/skills/javascript-package-selection/SKILL.md",
+          ".claude/skills/javascript-quality-tooling/SKILL.md",
+          "doc/javascript.md",
+          "doc/typescript.md",
+          "doc/javascript-tooling.md",
+          "doc/javascript-architecture.md"
         ],
         "cursor": [
           ".github/instructions/javascript.instructions.md",
@@ -459,6 +480,13 @@
           ".github/agents/javascript-research-planner.agent.md",
           ".github/agents/javascript-implementer.agent.md",
           ".github/agents/javascript-code-reviewer.agent.md",
+          ".claude/skills/javascript-foundations/SKILL.md",
+          ".claude/skills/javascript-package-selection/SKILL.md",
+          ".claude/skills/javascript-quality-tooling/SKILL.md",
+          "doc/javascript.md",
+          "doc/typescript.md",
+          "doc/javascript-tooling.md",
+          "doc/javascript-architecture.md",
           ".cursor/rules/javascript.mdc",
           ".cursor/rules/javascript-testing.mdc"
         ],
@@ -468,9 +496,19 @@
           ".github/agents/javascript-research-planner.agent.md",
           ".github/agents/javascript-implementer.agent.md",
           ".github/agents/javascript-code-reviewer.agent.md",
+          ".github/skills/javascript-foundations/SKILL.md",
+          ".github/skills/javascript-package-selection/SKILL.md",
+          ".github/skills/javascript-quality-tooling/SKILL.md",
+          "doc/javascript.md",
+          "doc/typescript.md",
+          "doc/javascript-tooling.md",
+          "doc/javascript-architecture.md",
           ".codex/agents/javascript-research-planner.toml",
           ".codex/agents/javascript-implementer.toml",
-          ".codex/agents/javascript-code-reviewer.toml"
+          ".codex/agents/javascript-code-reviewer.toml",
+          ".agents/skills/javascript-foundations/SKILL.md",
+          ".agents/skills/javascript-package-selection/SKILL.md",
+          ".agents/skills/javascript-quality-tooling/SKILL.md"
         ]
       },
       "frameworks": {
@@ -480,11 +518,55 @@
         },
         "vue": {
           "label": "Vue",
-          "files_by_agent": {}
+          "files_by_agent": {
+            "copilot": [
+              ".github/skills/javascript-vue-foundations/SKILL.md",
+              "doc/javascript-vue.md"
+            ],
+            "claude": [
+              ".claude/skills/javascript-vue-foundations/SKILL.md",
+              "doc/javascript-vue.md"
+            ],
+            "opencode": [
+              ".claude/skills/javascript-vue-foundations/SKILL.md",
+              "doc/javascript-vue.md"
+            ],
+            "cursor": [
+              ".claude/skills/javascript-vue-foundations/SKILL.md",
+              "doc/javascript-vue.md"
+            ],
+            "codex": [
+              ".github/skills/javascript-vue-foundations/SKILL.md",
+              ".agents/skills/javascript-vue-foundations/SKILL.md",
+              "doc/javascript-vue.md"
+            ]
+          }
         },
         "react": {
           "label": "React",
-          "files_by_agent": {}
+          "files_by_agent": {
+            "copilot": [
+              ".github/skills/javascript-react-foundations/SKILL.md",
+              "doc/javascript-react.md"
+            ],
+            "claude": [
+              ".claude/skills/javascript-react-foundations/SKILL.md",
+              "doc/javascript-react.md"
+            ],
+            "opencode": [
+              ".claude/skills/javascript-react-foundations/SKILL.md",
+              "doc/javascript-react.md"
+            ],
+            "cursor": [
+              ".claude/skills/javascript-react-foundations/SKILL.md",
+              "doc/javascript-react.md"
+            ],
+            "codex": [
+              ".github/skills/javascript-react-foundations/SKILL.md",
+              ".agents/skills/javascript-react-foundations/SKILL.md",
+              "doc/javascript-react.md"
+            ]
+          }
         }
       }
     },

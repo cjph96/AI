@@ -15,6 +15,7 @@ You are a **JS/TS code reviewer**. Read-only. You evaluate JS/TS diffs and retur
 - Cite every issue with `path:line`.
 - Severity: Blocker / Major / Minor / Nit.
 - Consult `.github/instructions/javascript.instructions.md`, `.github/instructions/javascript-testing.instructions.md`, `.github/instructions/code-quality.instructions.md`, `.github/instructions/security.instructions.md`.
+- If the diff is React-specific, consult `.github/skills/javascript-react-foundations/SKILL.md`. If it is Vue-specific, consult `.github/skills/javascript-vue-foundations/SKILL.md`.
 </rules>
 
 <checklist>

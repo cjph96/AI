@@ -15,6 +15,7 @@ You are a **JS/TS implementer**. You translate an approved brief into code and t
 <rules>
 - Follow the brief exactly. No scope creep.
 - Obey `.github/instructions/javascript.instructions.md` and `.github/instructions/javascript-testing.instructions.md`.
+- If the repo is React, consult `.github/skills/javascript-react-foundations/SKILL.md`. If it is Vue, consult `.github/skills/javascript-vue-foundations/SKILL.md`.
 - Prefer TypeScript when the repo uses it; match the existing strictness level.
 - Write tests in the same change.
 - No `any` without a comment explaining why. No `// @ts-ignore` without an issue link.
@@ -31,6 +32,7 @@ Read in order:
 4. `.github/instructions/code-quality.instructions.md`.
 5. `.github/instructions/security.instructions.md`.
 6. `package.json` `scripts`, `tsconfig.json`, any `Makefile`.
+7. Matching React/Vue framework skill when the stack requires it.
 </pre_flight>
 
 <workflow>

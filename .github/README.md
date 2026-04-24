@@ -62,6 +62,8 @@ Chat modes (`.chatmode.md`) have been removed: VS Code replaced them with custom
 | **Generic**        | `research-planner`    | `implementer`      | `code-reviewer`     |
 | **PHP**            | `php-research-planner`| `php-implementer`  | `php-code-reviewer` |
 | **JavaScript/TS**  | `javascript-research-planner` | `javascript-implementer` | `javascript-code-reviewer` |
+| **Python**         | `python-research-planner` | `python-implementer` | `python-code-reviewer` |
+| **Go**             | `go-research-planner` | `go-implementer` | `go-code-reviewer` |
 
 Prefer the generic agents by default. Escalate to specialized variants only when stack-specific conventions (PHP DDD, React/Vue, TanStack, etc.) are needed.
 
@@ -70,7 +72,11 @@ Prefer the generic agents by default. Escalate to specialized variants only when
 Framework-specific assets are not always installed. They are copied only when the installer selection includes the matching framework.
 
 - `php:symfony` adds Symfony instructions, `symfony-*` specialist agents, curated Symfony skills, and framework-specific slash prompts.
+- `php:laravel` adds Laravel instructions, testing guidance, and Laravel-first package-selection support.
+- `javascript:react` adds React-specific JS skills and reference notes.
+- `javascript:vue` adds Vue-specific JS skills and reference notes.
 - Base PHP installs continue to expose only the generic PHP assets.
+- Base JavaScript installs continue to expose only the generic JS/TS assets.
 
 ## Design principles
 

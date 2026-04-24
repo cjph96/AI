@@ -13,6 +13,8 @@ Constraints:
 Delegate to:
 - `research-planner` by default.
 - `php-research-planner` if the change is PHP-only.
-- `javascript-research-planner` if the change is JS/TS-only.
+- `javascript-research-planner` if the change is JS/TS-only. When the stack is React or Vue, expect it to apply the matching framework skill.
+- `python-research-planner` if the change is Python-only.
+- `go-research-planner` if the change is Go-only.
 
 Return the brief and stop. Do not start implementing.

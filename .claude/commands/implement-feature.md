@@ -15,6 +15,8 @@ Constraints:
 Delegate to:
 - `implementer` by default.
 - `php-implementer` for PHP-only changes.
-- `javascript-implementer` for JS/TS-only changes.
+- `javascript-implementer` for JS/TS-only changes. When the stack is React or Vue, expect it to apply the matching framework skill.
+- `python-implementer` for Python-only changes.
+- `go-implementer` for Go-only changes.
 
 Return the implementation report as defined in the chosen implementer agent.
