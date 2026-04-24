@@ -61,7 +61,7 @@ usage() {
 install.sh — install the AI agent orchestration kit into a project
 
 Options:
-  --repo=OWNER/REPO         Source repository (default: from $AI_TOOLS_REPO or cristianperez/AI)
+  --repo=OWNER/REPO         Source repository (default: from $AI_TOOLS_REPO or cjph96/AI)
   --ref=REF                 Git branch or tag (default: main)
   --dest=PATH               Destination project root (default: current directory)
   --manifest=FILE           Use a local manifest.json (skips network download)

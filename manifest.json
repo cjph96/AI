@@ -12,7 +12,6 @@
       "label": "GitHub Copilot (VS Code)",
       "files": [
         ".github/copilot-instructions.md",
-        ".github/README.md",
         ".github/instructions/code-quality.instructions.md",
         ".github/instructions/testing.instructions.md",
         ".github/instructions/security.instructions.md",

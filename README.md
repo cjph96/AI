@@ -1,15 +1,49 @@
-# AI agent orchestration kit
+# AI
 
 A portable set of agents, skills, instructions and prompts that give **GitHub Copilot**, **Claude Code**, **OpenCode**, **Cursor**, and **Codex** a consistent *research → plan → implement → review* workflow.
 
 The repository is the single source of truth. The [`install.sh`](install.sh) script copies a selected subset into any other project.
+
+## Core pattern: Orchestrator + Specialist Agents
+
+```
+┌──────────────┐   plan    ┌────────────┐   brief    ┌────────────────┐
+│  USER/TICKET │──────────▶│ORCHESTRATOR│───────────▶│RESEARCH PLANNER│
+└──────────────┘           └────────────┘            └───────┬────────┘
+                                 ▲                           │
+                                 │ report                    ▼
+                          ┌──────┴───────┐            ┌─────────────┐
+                          │  Fix loop    │◀───────────│ IMPLEMENTER │
+                          │  (until OK)  │            └──────┬──────┘
+                          └──────┬───────┘                   │
+                                 │                           ▼
+                                 │                    ┌─────────────┐
+                                 └────────────────────│CODE REVIEWER│
+                                                      └─────────────┘
+```
+
+1. **Plan** — a research/planning agent produces a grounded brief.
+2. **Implement** — an implementation agent applies the change and adds validation.
+3. **Review** — a review agent checks correctness, design, tests, and risks.
+4. **Loop** — review feedback is routed back into implementation until the change is clean.
+5. **Report** — the outcome is summarized with evidence from tests and quality gates.
+
+This keeps the workflow consistent across tools while preserving each platform's native surfaces.
+
+## Design principles
+
+- **Agnostic first** — the shared workflow is defined once and adapted to each tool.
+- **Progressive disclosure** — skills keep the main guidance short and move detail into references when needed.
+- **Deterministic execution** — validation should rely on explicit commands and repeatable quality gates.
+- **Evidence over claims** — completion is backed by observed test and review results.
+- **Human-in-the-loop by default** — planning and implementation remain easy to inspect and approve.
 
 ## Install in another project
 
 Run the one-liner from the target project's root directory:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/cristianperez/AI/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/cjph96/AI/refs/heads/main/install.sh | bash
 ```
 
 The script asks interactively for:
@@ -23,6 +57,17 @@ Only the files mapped in [`manifest.json`](manifest.json) for the selected combi
 
 Selecting `php` now also installs the base PHP skills for foundations, package selection, and quality tooling. Selecting `javascript` installs the base JavaScript skills for foundations, package selection, and quality tooling. Selecting `javascript:react` or `javascript:vue` adds the matching framework-specific skills and reference notes on top of that base surface. Selecting `php:laravel` adds a Laravel-first package selection skill on top of the base PHP surface.
 
+## Language coverage
+
+The repository provides a generic orchestration layer plus stack-specific specializations for:
+
+- PHP
+- JavaScript / TypeScript
+- Python
+- Go
+
+Generic agents remain the default. Language-specific variants extend the same workflow when framework or ecosystem rules matter.
+
 ### Requirements
 
 - `bash`
@@ -34,7 +79,7 @@ Selecting `php` now also installs the base PHP skills for foundations, package s
 Useful for CI or scripted bootstrapping:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/cristianperez/AI/main/install.sh \
+curl -fsSL https://raw.githubusercontent.com/cjph96/AI/refs/heads/main/install.sh \
   | bash -s -- \
       --non-interactive \
       --agents=copilot,claude \
@@ -48,7 +93,7 @@ curl -fsSL https://raw.githubusercontent.com/cristianperez/AI/main/install.sh \
 
 | Flag | Description |
 |------|-------------|
-| `--repo=OWNER/REPO` | Source repository (default: `cristianperez/AI`, override via `$AI_TOOLS_REPO`) |
+| `--repo=OWNER/REPO` | Source repository (default: `cjph96/AI`, override via `$AI_TOOLS_REPO`) |
 | `--ref=REF` | Branch or tag (default: `main`, override via `$AI_TOOLS_REF`) |
 | `--dest=PATH` | Target project root (default: current directory) |
 | `--agents=a,b,c` | Non-interactive selection |
