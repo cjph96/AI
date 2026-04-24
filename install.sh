@@ -149,8 +149,33 @@ check_preflight() {
 
 # Create a secure temp dir. Cleaned on exit.
 TMPDIR_INSTALL=""
+TTY_STATE_BACKUP=""
+TTY_FD_OPEN=0
+TTY_MENU_ACTIVE=0
+TTY_MENU_ANCHOR_ROW=1
+
+restore_tty_state() {
+  if [ "$TTY_MENU_ACTIVE" = "1" ]; then
+    printf '\033[?1000l\033[?1006l\033[?25h\033[u\033[J' >&3 2>/dev/null || true
+    TTY_MENU_ACTIVE=0
+  fi
+  if [ -n "$TTY_STATE_BACKUP" ]; then
+    stty "$TTY_STATE_BACKUP" < /dev/tty 2>/dev/null || true
+    TTY_STATE_BACKUP=""
+  fi
+  if [ "$TTY_FD_OPEN" = "1" ]; then
+    exec 3>&- 3<&- 2>/dev/null || true
+    TTY_FD_OPEN=0
+  fi
+}
+
 cleanup() {
-  [ -n "${TMPDIR_INSTALL:-}" ] && [ -d "$TMPDIR_INSTALL" ] && rm -rf "$TMPDIR_INSTALL"
+  local exit_status=$?
+  restore_tty_state || true
+  if [ -n "${TMPDIR_INSTALL:-}" ] && [ -d "$TMPDIR_INSTALL" ]; then
+    rm -rf "$TMPDIR_INSTALL"
+  fi
+  return "$exit_status"
 }
 trap cleanup EXIT
 
@@ -172,6 +197,316 @@ read_tty() {
     IFS= read -r __val || true
   fi
   eval "$__var=\$__val"
+}
+
+can_use_tui_menu() {
+  [ -r /dev/tty ] && [ -w /dev/tty ] && [ "${TERM:-dumb}" != "dumb" ] \
+    && stty -g < /dev/tty >/dev/null 2>&1
+}
+
+menu_option_label() {
+  local id="$1"
+  local label
+  label=$(jq -r --arg id "$id" --arg path "$MULTI_SELECT_PATH" \
+    'getpath($path | split("."))[$id].label // $id' "$MANIFEST_FILE")
+  case "$MULTI_SELECT_PATH:$id" in
+    languages.javascript.frameworks:vanilla)
+      printf '%s' 'Vanilla (none)'
+      ;;
+    *:none)
+      printf '%s' 'none'
+      ;;
+    *)
+      printf '%s' "$label"
+      ;;
+  esac
+}
+
+is_none_like_option() {
+  local id="$1"
+  case "$MULTI_SELECT_PATH:$id" in
+    languages.javascript.frameworks:vanilla|*:none) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+order_menu_ids() {
+  local none_like=() regular=() id
+  for id in "$@"; do
+    if is_none_like_option "$id"; then
+      none_like+=("$id")
+    else
+      regular+=("$id")
+    fi
+  done
+  for id in "${none_like[@]-}"; do
+    [ -n "$id" ] && printf '%s\n' "$id"
+  done
+  for id in "${regular[@]-}"; do
+    [ -n "$id" ] && printf '%s\n' "$id"
+  done
+}
+
+menu_setup_tty() {
+  can_use_tui_menu || return 1
+  exec 3<> /dev/tty || return 1
+  TTY_FD_OPEN=1
+  TTY_STATE_BACKUP=$(stty -g < /dev/tty)
+  stty -echo -icanon time 0 min 1 < /dev/tty
+  printf '\033[?1000h\033[?1006h\033[?25l' >&3
+  TTY_MENU_ANCHOR_ROW=$(menu_cursor_row)
+  printf '\033[s' >&3
+  TTY_MENU_ACTIVE=1
+  return 0
+}
+
+menu_cursor_row() {
+  local response="" ch=""
+  printf '\033[6n' >&3
+  while IFS= read -rsn1 -u 3 ch; do
+    response="${response}${ch}"
+    [ "$ch" = "R" ] && break
+  done
+  response="${response#*[}"
+  response="${response%%;*}"
+  case "$response" in
+    ''|*[!0-9]*) printf '%s' 1 ;;
+    *) printf '%s' "$response" ;;
+  esac
+}
+
+menu_read_event() {
+  local key="" next="" seq="" ch=""
+  IFS= read -rsn1 -u 3 key || return 1
+  case "$key" in
+    $'\r'|$'\n') printf '%s' 'enter' ;;
+    ' ') printf '%s' 'space' ;;
+    $'\033')
+      IFS= read -rsn1 -u 3 next || {
+        printf '%s' 'escape'
+        return 0
+      }
+      if [ "$next" = '[' ]; then
+        IFS= read -rsn1 -u 3 next || {
+          printf '%s' 'escape'
+          return 0
+        }
+        case "$next" in
+          A) printf '%s' 'up' ;;
+          B) printf '%s' 'down' ;;
+          '<')
+            while IFS= read -rsn1 -u 3 ch; do
+              seq="${seq}${ch}"
+              case "$ch" in
+                M|m) break ;;
+              esac
+            done
+            printf 'mouse:%s' "$seq"
+            ;;
+          *) printf '%s' 'escape' ;;
+        esac
+      else
+        printf '%s' 'escape'
+      fi
+      ;;
+    *) printf 'char:%s' "$key" ;;
+  esac
+}
+
+menu_click_target() {
+  local mouse_seq="$1" option_count="$2" action_index="$3"
+  local payload button x y event option_start action_row
+  payload="${mouse_seq%[Mm]}"
+  event="${mouse_seq#${payload}}"
+  [ "$event" = "M" ] || return 1
+  button="${payload%%;*}"
+  payload="${payload#*;}"
+  x="${payload%%;*}"
+  y="${payload#*;}"
+  case "$button" in
+    ''|*[!0-9]*) return 1 ;;
+  esac
+  case "$y" in
+    ''|*[!0-9]*) return 1 ;;
+  esac
+  option_start=$((TTY_MENU_ANCHOR_ROW + 1))
+  action_row=$((option_start + option_count))
+  if [ "$y" -ge "$option_start" ] && [ "$y" -lt "$action_row" ]; then
+    printf '%s' $((y - option_start))
+    return 0
+  fi
+  if [ "$action_index" -ge 0 ] && [ "$y" -eq "$action_row" ]; then
+    printf '%s' "$action_index"
+    return 0
+  fi
+  return 1
+}
+
+render_choice_menu() {
+  local title="$1" mode="$2" current="$3" action_index="$4"
+  shift 4
+  local entries=("$@")
+  local idx entry id label marker checkbox hint
+  printf '\033[u\033[J' >&3
+  printf '%b%s%b\r\n' "$C_BOLD" "$title" "$C_RESET" >&3
+  for idx in "${!entries[@]}"; do
+    entry="${entries[$idx]}"
+    id="${entry%%$'\t'*}"
+    label="${entry#*$'\t'}"
+    marker=' '
+    [ "$idx" -eq "$current" ] && marker='>'
+    if [ "$mode" = 'many' ]; then
+      checkbox='[ ]'
+      [ -n "${MENU_SELECTED[$idx]:-}" ] && checkbox='[x]'
+      printf ' %s %s %s %s(%s)%s\r\n' "$marker" "$checkbox" "$label" "$C_DIM" "$id" "$C_RESET" >&3
+    else
+      printf ' %s %s %s(%s)%s\r\n' "$marker" "$label" "$C_DIM" "$id" "$C_RESET" >&3
+    fi
+  done
+  if [ "$action_index" -ge 0 ]; then
+    marker=' '
+    [ "$current" -eq "$action_index" ] && marker='>'
+    printf ' %s %s\r\n' "$marker" 'Continue' >&3
+    hint='Use arrows or mouse. Enter toggles and jumps to Continue; Enter again confirms.'
+  else
+    hint='Use arrows or mouse. Enter selects.'
+  fi
+  printf '%b%s%b\r\n' "$C_DIM" "$hint" "$C_RESET" >&3
+}
+
+run_choice_menu() {
+  local title="$1" mode="$2"
+  shift 2
+  local entries=("$@")
+  local current=0 action_index=-1 event target selected_values="" idx
+  MENU_SELECTED=()
+  [ "$mode" = 'many' ] && action_index=${#entries[@]}
+
+  menu_setup_tty || return 1
+  while :; do
+    render_choice_menu "$title" "$mode" "$current" "$action_index" "${entries[@]}"
+    event=$(menu_read_event) || {
+      restore_tty_state
+      return 1
+    }
+    case "$event" in
+      up)
+        current=$((current - 1))
+        if [ "$current" -lt 0 ]; then
+          current=$([ "$action_index" -ge 0 ] && printf '%s' "$action_index" || printf '%s' $((${#entries[@]} - 1)))
+        fi
+        ;;
+      down)
+        current=$((current + 1))
+        if [ "$action_index" -ge 0 ] && [ "$current" -gt "$action_index" ]; then
+          current=0
+        elif [ "$action_index" -lt 0 ] && [ "$current" -ge ${#entries[@]} ]; then
+          current=0
+        fi
+        ;;
+      enter|space)
+        if [ "$mode" = 'one' ]; then
+          selected_values="${entries[$current]}"
+          selected_values="${selected_values%%$'\t'*}"
+          restore_tty_state
+          printf '%s' "$selected_values"
+          return 0
+        fi
+        if [ "$current" -eq "$action_index" ]; then
+          selected_values=""
+          for idx in "${!entries[@]}"; do
+            [ -n "${MENU_SELECTED[$idx]:-}" ] || continue
+            selected_values="${selected_values} ${entries[$idx]%%$'\t'*}"
+          done
+          restore_tty_state
+          printf '%s' "$(printf '%s' "$selected_values" | xargs)"
+          return 0
+        fi
+        if [ -n "${MENU_SELECTED[$current]:-}" ]; then
+          MENU_SELECTED[$current]=''
+        else
+          MENU_SELECTED[$current]=1
+        fi
+        current=$action_index
+        ;;
+      mouse:*)
+        target=$(menu_click_target "${event#mouse:}" "${#entries[@]}" "$action_index") || continue
+        current=$target
+        if [ "$mode" = 'one' ]; then
+          selected_values="${entries[$current]}"
+          selected_values="${selected_values%%$'\t'*}"
+          restore_tty_state
+          printf '%s' "$selected_values"
+          return 0
+        fi
+        if [ "$current" -eq "$action_index" ]; then
+          selected_values=""
+          for idx in "${!entries[@]}"; do
+            [ -n "${MENU_SELECTED[$idx]:-}" ] || continue
+            selected_values="${selected_values} ${entries[$idx]%%$'\t'*}"
+          done
+          restore_tty_state
+          printf '%s' "$(printf '%s' "$selected_values" | xargs)"
+          return 0
+        fi
+        if [ -n "${MENU_SELECTED[$current]:-}" ]; then
+          MENU_SELECTED[$current]=''
+        else
+          MENU_SELECTED[$current]=1
+        fi
+        current=$action_index
+        ;;
+      escape)
+        ;;
+      *)
+        ;;
+    esac
+  done
+}
+
+legacy_multi_select() {
+  local title="$1"; shift
+  local ids=("$@")
+  local i=1
+  printf '\n%b%s%b\n' "$C_BOLD" "$title" "$C_RESET" > /dev/tty
+  for id in "${ids[@]}"; do
+    local label
+    label=$(menu_option_label "$id")
+    printf '  %2d) %s %s(%s)%s\n' "$i" "$label" "$C_DIM" "$id" "$C_RESET" > /dev/tty
+    i=$((i+1))
+  done
+  printf '  %s\n' "(comma-separated numbers, empty = none)" > /dev/tty
+  local input=""
+  read_tty "> " input
+  local out=""
+  local IFS_BAK=$IFS
+  IFS=', '
+  for num in $input; do
+    [ -z "$num" ] && continue
+    case "$num" in
+      ''|*[!0-9]*) warn "ignoring non-numeric token: $num"; continue ;;
+    esac
+    if [ "$num" -ge 1 ] && [ "$num" -le ${#ids[@]} ]; then
+      out="$out ${ids[$((num-1))]}"
+    else
+      warn "ignoring out-of-range: $num"
+    fi
+  done
+  IFS=$IFS_BAK
+  echo "$out" | xargs -n1 2>/dev/null | sort -u | tr '\n' ' '
+}
+
+prompt_choice() {
+  local title="$1"; shift
+  local entries=("$@")
+  local result
+  if can_use_tui_menu && result=$(run_choice_menu "$title" one "${entries[@]}"); then
+    printf '%s' "$result"
+    return 0
+  fi
+  local input=""
+  read_tty "$title" input
+  printf '%s' "$input"
 }
 
 # ---------------------------------------------------------------------------
@@ -251,40 +586,23 @@ manifest_label() {
 # Interactive selection
 # ---------------------------------------------------------------------------
 
-# Multi-select: prints labels numbered, reads comma-separated indices, echoes
-# the resulting space-separated ids to stdout.
 multi_select() {
   local title="$1"; shift
-  local ids=("$@")
-  local i=1
-  printf '\n%b%s%b\n' "$C_BOLD" "$title" "$C_RESET" > /dev/tty
-  for id in "${ids[@]}"; do
-    local label
-    label=$(jq -r --arg id "$id" --arg path "$MULTI_SELECT_PATH" \
-      'getpath($path | split("."))[$id].label // $id' "$MANIFEST_FILE")
-    printf '  %2d) %s %s(%s)%s\n' "$i" "$label" "$C_DIM" "$id" "$C_RESET" > /dev/tty
-    i=$((i+1))
+  local ordered_ids=() id label entries=() result
+  while IFS= read -r id; do
+    ordered_ids+=("$id")
+  done <<EOF
+$(order_menu_ids "$@")
+EOF
+  for id in "${ordered_ids[@]}"; do
+    label=$(menu_option_label "$id")
+    entries+=("${id}"$'\t'"${label}")
   done
-  printf '  %s\n' "(comma-separated numbers, empty = none)" > /dev/tty
-  local input=""
-  read_tty "> " input
-  # Parse: "1,3" -> ids by index.
-  local out=""
-  local IFS_BAK=$IFS
-  IFS=', '
-  for num in $input; do
-    [ -z "$num" ] && continue
-    case "$num" in
-      ''|*[!0-9]*) warn "ignoring non-numeric token: $num"; continue ;;
-    esac
-    if [ "$num" -ge 1 ] && [ "$num" -le ${#ids[@]} ]; then
-      out="$out ${ids[$((num-1))]}"
-    else
-      warn "ignoring out-of-range: $num"
-    fi
-  done
-  IFS=$IFS_BAK
-  echo "$out" | xargs -n1 2>/dev/null | sort -u | tr '\n' ' '
+  if can_use_tui_menu && result=$(run_choice_menu "$title" many "${entries[@]}"); then
+    printf '%s' "$result"
+    return 0
+  fi
+  legacy_multi_select "$title" "${ordered_ids[@]}"
 }
 
 interactive_select() {
@@ -555,8 +873,11 @@ EOF
     die "conflicts detected; pass --force or --skip-existing in non-interactive mode"
   fi
 
-  local choice=""
-  read_tty "Overwrite existing files? [o]verwrite / [s]kip / [c]ancel: " choice
+  local choice
+  choice=$(prompt_choice "Overwrite existing files" \
+    $'o\toverwrite' \
+    $'s\tskip' \
+    $'c\tcancel')
   case "$choice" in
     o|O|overwrite) FORCE=1 ;;
     s|S|skip)      SKIP_EXISTING=1 ;;
@@ -566,8 +887,10 @@ EOF
 
 confirm_plan() {
   [ "$NON_INTERACTIVE" = "1" ] && return 0
-  local answer=""
-  read_tty "Proceed with installation? [y/N]: " answer
+  local answer
+  answer=$(prompt_choice "Proceed with installation?" \
+    $'y\tyes' \
+    $'n\tno')
   case "$answer" in
     y|Y|yes|YES) return 0 ;;
     *) die "cancelled by user" ;;
@@ -724,4 +1047,6 @@ main() {
   print_next_steps
 }
 
-main "$@"
+if [ "${BASH_SOURCE[0]-$0}" = "$0" ]; then
+  main "$@"
+fi

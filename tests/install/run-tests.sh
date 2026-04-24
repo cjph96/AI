@@ -778,6 +778,74 @@ EOF
   rm -rf "$tmp" "$dest"
 }
 
+test_source_install_sh_under_nounset() {
+  local name="install.sh can be sourced with set -u"
+  if bash <<'EOF' >/dev/null 2>&1; then
+set -euo pipefail
+source ./install.sh
+EOF
+    pass "$name"
+  else
+    fail "$name" "sourcing install.sh failed under nounset"
+  fi
+}
+
+test_install_sh_runs_from_stdin() {
+  local name="install.sh runs when piped to bash"
+  if cat "$INSTALLER" | bash -s -- --help >/dev/null 2>&1; then
+    pass "$name"
+  else
+    fail "$name" "piped install.sh did not execute"
+  fi
+}
+
+test_order_menu_ids_with_no_none_like_options() {
+  local name="order_menu_ids works under nounset when no none-like option exists"
+  local result
+  result=$(INSTALLER_PATH="$INSTALLER" bash <<'EOF'
+set -euo pipefail
+source "$INSTALLER_PATH"
+MULTI_SELECT_PATH="agents"
+order_menu_ids copilot claude
+EOF
+)
+
+  if [ "$result" = $'copilot\nclaude' ]; then
+    pass "$name"
+  else
+    fail "$name" "unexpected order output: $result"
+  fi
+}
+
+test_menu_none_order_and_labels() {
+  local name="interactive menu helpers put none-like options first and relabel them"
+  local result
+  result=$(INSTALLER_PATH="$INSTALLER" MANIFEST_PATH="$MANIFEST" bash <<'EOF'
+set -euo pipefail
+source "$INSTALLER_PATH"
+MANIFEST_FILE="$MANIFEST_PATH"
+
+MULTI_SELECT_PATH="languages.php.frameworks"
+php_ids=($(manifest_list_frameworks php))
+php_order=$(order_menu_ids "${php_ids[@]}" | tr '\n' ' ' | xargs)
+php_label=$(menu_option_label none)
+
+MULTI_SELECT_PATH="languages.javascript.frameworks"
+js_ids=($(manifest_list_frameworks javascript))
+js_order=$(order_menu_ids "${js_ids[@]}" | tr '\n' ' ' | xargs)
+js_label=$(menu_option_label vanilla)
+
+printf '%s|%s|%s|%s' "$php_order" "$php_label" "$js_order" "$js_label"
+EOF
+)
+
+if [ "$result" = "none laravel symfony|none|vanilla react vue|Vanilla (none)" ]; then
+    pass "$name"
+  else
+    fail "$name" "unexpected helper output: $result"
+  fi
+}
+
 # -----------------------------------------------------------------------------
 # 12. Symfony framework selection installs only the Symfony-specific assets.
 # -----------------------------------------------------------------------------
@@ -992,6 +1060,10 @@ main() {
   test_conflicting_flags
   test_non_interactive_requires_agents
   test_default_repo_download_source
+  test_source_install_sh_under_nounset
+  test_install_sh_runs_from_stdin
+  test_order_menu_ids_with_no_none_like_options
+  test_menu_none_order_and_labels
   test_symfony_framework_install_copilot
   test_symfony_framework_install_claude
   test_symfony_framework_install_opencode

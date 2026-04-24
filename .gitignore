@@ -1,2 +1,13 @@
 .idea
 .vscode
+
+# Local installer/test artifacts
+full_test_log.txt
+test_output.txt
+test_output_full.txt
+run-debug.sh
+temp_install_dir/
+temp_install_test/
+
+# macOS metadata
+.DS_Store
