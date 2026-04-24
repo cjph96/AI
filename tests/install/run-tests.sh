@@ -708,13 +708,18 @@ test_non_interactive_requires_agents() {
 # 12b. Default remote repo matches the canonical origin when --repo is omitted.
 # -----------------------------------------------------------------------------
 test_default_repo_download_source() {
-  local name="default repo downloads manifest from canonical origin"
-  local tmp dest fake_bin curl_log
+  local name="default repo downloads manifest and reuses a single remote source archive"
+  local tmp dest fake_bin curl_log archive_root archive_file
   tmp=$(mktmp)
   dest=$(mktmp)
   fake_bin="${tmp}/bin"
-  curl_log="${tmp}/curl-url.txt"
+  curl_log="${tmp}/curl-urls.txt"
+  archive_root="${tmp}/archive-root"
+  archive_file="${tmp}/source.tar.gz"
   mkdir -p "$fake_bin"
+  mkdir -p "${archive_root}/ai-test-source"
+  printf 'test agent rules\n' > "${archive_root}/ai-test-source/AGENTS.md"
+  tar -czf "$archive_file" -C "$archive_root" ai-test-source
 
   cat > "${fake_bin}/curl" <<EOF
 #!/usr/bin/env bash
@@ -738,11 +743,9 @@ while [ "\$#" -gt 0 ]; do
   esac
 done
 
-if [ "\${url##*/}" = "manifest.json" ]; then
-  printf '%s' "\$url" > "$curl_log"
-fi
+printf '%s\n' "\$url" >> "$curl_log"
 
-if [ -n "\$out" ]; then
+if [ -n "\$out" ] && [ "\${url##*/}" = "manifest.json" ]; then
   cat > "\$out" <<'JSON'
 {
   "version": "0.0.0",
@@ -755,14 +758,21 @@ if [ -n "\$out" ]; then
 }
 JSON
 fi
+
+if [ -n "\$out" ] && printf '%s' "\$url" | grep -Fq 'https://codeload.github.com/cjph96/AI/tar.gz/main'; then
+  cp "$archive_file" "\$out"
+fi
 EOF
   chmod +x "${fake_bin}/curl"
 
   if PATH="${fake_bin}:$PATH" bash "$INSTALLER" --dest="$dest" --agents=x --non-interactive >/dev/null 2>&1 \
-      && [ "$(cat "$curl_log")" = "https://raw.githubusercontent.com/cjph96/AI/main/manifest.json" ]; then
+      && [ -f "${dest}/AGENTS.md" ] \
+      && grep -Fxq 'https://raw.githubusercontent.com/cjph96/AI/main/manifest.json' "$curl_log" \
+      && grep -Fxq 'https://codeload.github.com/cjph96/AI/tar.gz/main' "$curl_log" \
+      && ! grep -Fxq 'https://raw.githubusercontent.com/cjph96/AI/main/AGENTS.md' "$curl_log"; then
     pass "$name"
   else
-    fail "$name" "unexpected manifest source: $(cat "$curl_log" 2>/dev/null || echo '<missing>')"
+    fail "$name" "unexpected remote fetch pattern: $(tr '\n' ' ' < "$curl_log" 2>/dev/null || echo '<missing>')"
   fi
 
   rm -rf "$tmp" "$dest"

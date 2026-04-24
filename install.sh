@@ -27,6 +27,8 @@ REF=""
 DEST=""
 SOURCE_URL=""
 SOURCE_LOCAL=""
+REMOTE_SOURCE_LOCAL=""
+REMOTE_SOURCE_ATTEMPTED=0
 MANIFEST_OVERRIDE=""
 FORCE=0
 SKIP_EXISTING=0
@@ -55,6 +57,20 @@ info()  { log "${C_BLUE}==>${C_RESET} $*"; }
 warn()  { log "${C_YELLOW}warning:${C_RESET} $*" >&2; }
 error() { log "${C_RED}error:${C_RESET} $*" >&2; }
 die()   { error "$*"; exit 1; }
+
+download_file() {
+  # $1 = URL, $2 = output path
+  local url="$1" outpath="$2" attempt
+  for attempt in 1 2 3; do
+    if curl -fsSL "$url" -o "$outpath"; then
+      return 0
+    fi
+    if [ "$attempt" -lt 3 ]; then
+      warn "download failed for $url (attempt $attempt/3); retrying"
+    fi
+  done
+  return 1
+}
 
 usage() {
   cat <<'USAGE'
@@ -126,6 +142,7 @@ parse_args() {
 check_preflight() {
   command -v curl >/dev/null 2>&1 || die "curl is required but not installed"
   command -v jq   >/dev/null 2>&1 || die "jq is required. Install it: macOS 'brew install jq' / Debian 'sudo apt-get install jq' / Alpine 'apk add jq'"
+  command -v tar  >/dev/null 2>&1 || die "tar is required but not installed"
   # bash >= 4 is not strictly required; keep script compatible with macOS 3.2.
   [ -w "$DEST" ] || die "destination not writable: $DEST"
 }
@@ -175,11 +192,43 @@ load_manifest() {
   else
     MANIFEST_FILE="${TMPDIR_INSTALL}/manifest.json"
     info "downloading manifest from ${SOURCE_URL}/manifest.json"
-    curl -fsSL "${SOURCE_URL}/manifest.json" -o "$MANIFEST_FILE" \
+    download_file "${SOURCE_URL}/manifest.json" "$MANIFEST_FILE" \
       || die "failed to download manifest from ${SOURCE_URL}/manifest.json"
   fi
 
   jq empty "$MANIFEST_FILE" >/dev/null 2>&1 || die "manifest is not valid JSON: $MANIFEST_FILE"
+}
+
+prepare_remote_source() {
+  local archive_url archive_file extract_dir
+  [ -n "$SOURCE_LOCAL" ] && return 1
+  [ -n "$REMOTE_SOURCE_LOCAL" ] && return 0
+  [ "$REMOTE_SOURCE_ATTEMPTED" = "1" ] && return 1
+
+  REMOTE_SOURCE_ATTEMPTED=1
+  archive_url="https://codeload.github.com/${REPO}/tar.gz/${REF}"
+  archive_file="${TMPDIR_INSTALL}/source.tar.gz"
+  extract_dir="${TMPDIR_INSTALL}/source"
+
+  info "downloading source archive from ${archive_url}"
+  if ! download_file "$archive_url" "$archive_file"; then
+    warn "failed to download source archive; falling back to per-file downloads"
+    return 1
+  fi
+
+  mkdir -p "$extract_dir"
+  tar -xzf "$archive_file" -C "$extract_dir" >/dev/null 2>&1 || {
+    warn "failed to extract source archive; falling back to per-file downloads"
+    return 1
+  }
+
+  REMOTE_SOURCE_LOCAL=$(find "$extract_dir" -mindepth 1 -maxdepth 1 -type d | head -n 1)
+  [ -n "$REMOTE_SOURCE_LOCAL" ] || {
+    warn "source archive did not contain an expected root directory; falling back to per-file downloads"
+    return 1
+  }
+
+  return 0
 }
 
 # Helpers that query the manifest via jq.
@@ -392,8 +441,10 @@ fetch_file() {
   mkdir -p "$(dirname "$outpath")"
   if [ -n "$SOURCE_LOCAL" ]; then
     cp "${SOURCE_LOCAL}/${relpath}" "$outpath"
+  elif [ -n "$REMOTE_SOURCE_LOCAL" ] || prepare_remote_source; then
+    cp "${REMOTE_SOURCE_LOCAL}/${relpath}" "$outpath"
   else
-    curl -fsSL "${SOURCE_URL}/${relpath}" -o "$outpath" \
+    download_file "${SOURCE_URL}/${relpath}" "$outpath" \
       || return 1
   fi
 }
@@ -443,11 +494,6 @@ install_files() {
       continue
     fi
 
-    local stagefile="${staging}/${file}"
-    if ! fetch_file "$file" "$stagefile"; then
-      die "failed to fetch $file"
-    fi
-
     if [ "$DRY_RUN" = "1" ]; then
       if [ "$existed" = "1" ]; then
         log "  ${C_YELLOW}would ow${C_RESET} $file"
@@ -455,6 +501,11 @@ install_files() {
         log "  ${C_GREEN}would ad${C_RESET} $file"
       fi
       continue
+    fi
+
+    local stagefile="${staging}/${file}"
+    if ! fetch_file "$file" "$stagefile"; then
+      die "failed to fetch $file"
     fi
 
     mkdir -p "$(dirname "$destfile")"
