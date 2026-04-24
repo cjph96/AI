@@ -88,6 +88,8 @@ Documented in [.github/instructions/orchestration-loop.instructions.md](.github/
 
 Canonical skills in [.github/skills/](.github/skills/), mirrored to [.claude/skills/](.claude/skills/) so Claude Code, OpenCode, and Cursor can discover them through their documented compatibility paths, and projected through [.agents/skills/](.agents/skills/) so Codex can discover them through its native repository path.
 
+For Claude/OpenCode shared resources, keep `.claude/skills/` self-contained: references and assets used by those skills should resolve inside `.claude/skills/`, and `.opencode/skills/` should only be introduced when OpenCode behavior must genuinely diverge from Claude.
+
 | Skill | Purpose |
 |-------|---------|
 | `orchestration-loop` | Runs the research-implement-review loop end-to-end. |

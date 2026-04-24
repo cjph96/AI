@@ -64,6 +64,10 @@ This repository correctly uses skills for:
 - TDD
 - Symfony-specific workflows
 
+Because OpenCode documents `.claude/skills/` compatibility, this directory is also the repository's standard shared workflow surface between Claude Code and OpenCode.
+
+The official docs do not establish the same shared pattern for `.claude/agents/` or `.claude/commands/` in OpenCode, so those remain Claude-native adapters rather than common cross-tool resources.
+
 ## Memory model
 
 Claude documents two complementary memory systems:
@@ -145,7 +149,7 @@ This repository aligns well with the official Claude guidance:
 
 - `CLAUDE.md` imports `AGENTS.md` rather than duplicating cross-tool rules.
 - `.claude/agents/` contains thin wrappers, not duplicated system prompts.
-- `.claude/skills/` mirrors reusable workflows.
+- `.claude/skills/` mirrors reusable workflows and acts as the shared skill surface for Claude Code and OpenCode.
 - `.claude/commands/` mirrors reusable prompt surfaces for Claude.
 - shared policy remains versioned in `.github/instructions/` and imported into Claude's entrypoint.
 

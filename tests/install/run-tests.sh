@@ -476,7 +476,7 @@ test_javascript_base_install_non_copilot() {
 }
 
 test_opencode_skill_install() {
-  local name="opencode selection installs shared skills via claude compatibility"
+  local name="opencode selection installs self-contained shared skills via claude compatibility"
   local dest; dest=$(mktmp)
   local command
   bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
@@ -495,13 +495,37 @@ test_opencode_skill_install() {
       && [ -f "${dest}/.claude/skills/code-review/references/verdict-template.md" ] \
       && [ -f "${dest}/.claude/skills/quality-gates/assets/report-template.md" ] \
       && [ -f "${dest}/.claude/skills/research-planning/references/brief-template.md" ] \
-      && [ -f "${dest}/.github/skills/quality-gates/assets/report-template.md" ] \
+      && ! grep -Fq '.github/skills/' "${dest}/.claude/skills/code-review/SKILL.md" \
+      && ! grep -Fq '.github/skills/' "${dest}/.claude/skills/quality-gates/SKILL.md" \
+      && ! grep -Fq '.github/skills/' "${dest}/.claude/skills/research-planning/SKILL.md" \
       && ! grep -Fq '.github/skills/' "${dest}/.claude/skills/skill-selection/SKILL.md" \
+      && [ ! -f "${dest}/.github/skills/quality-gates/assets/report-template.md" ] \
       && [ ! -f "${dest}/CLAUDE.md" ]; then
     pass "$name"
   else
     fail "$name" "expected skill compatibility assets missing"
   fi
+  rm -rf "$dest"
+}
+
+test_next_steps_follow_selected_agents() {
+  local name="next steps only mention selected agents and explain shared skill compatibility"
+  local dest output
+  dest=$(mktmp)
+  output=$(bash "$INSTALLER" --source="$REPO_ROOT" --manifest="$MANIFEST" --dest="$dest" \
+      --agents=copilot,opencode --languages=php --non-interactive 2>&1)
+
+  if printf '%s' "$output" | grep -Fq 'VS Code + Copilot:' \
+      && printf '%s' "$output" | grep -Fq 'OpenCode:' \
+      && printf '%s' "$output" | grep -Fq 'does not install Claude Code.' \
+      && ! printf '%s' "$output" | grep -Fq 'Claude Code:' \
+      && ! printf '%s' "$output" | grep -Fq 'Cursor:' \
+      && ! printf '%s' "$output" | grep -Fq 'Codex:'; then
+    pass "$name"
+  else
+    fail "$name" "unexpected post-install output"
+  fi
+
   rm -rf "$dest"
 }
 
@@ -947,6 +971,7 @@ main() {
   test_agent_filtering
   test_javascript_base_install_non_copilot
   test_opencode_skill_install
+  test_next_steps_follow_selected_agents
   test_cursor_install
   test_codex_install
   test_skip_existing

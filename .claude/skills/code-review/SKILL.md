@@ -44,5 +44,5 @@ Do not use to write fixes or refactors.
 
 ## References
 
-- Verdict template: `.github/skills/code-review/references/verdict-template.md`
+- Verdict template: `.claude/skills/code-review/references/verdict-template.md`
 - Code reviewer agent: `.github/agents/code-reviewer.agent.md`

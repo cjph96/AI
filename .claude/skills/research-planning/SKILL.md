@@ -33,5 +33,5 @@ Do not use when the user wants code written or a review performed.
 
 ## References
 
-- Brief template: `.github/skills/research-planning/references/brief-template.md`
+- Brief template: `.claude/skills/research-planning/references/brief-template.md`
 - Research planner agent: `.github/agents/research-planner.agent.md`

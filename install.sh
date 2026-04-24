@@ -40,8 +40,8 @@ SELECTED_TECHNOLOGIES=""
 
 # Colors (disabled if not a TTY).
 if [ -t 1 ]; then
-  C_RESET="\033[0m"; C_BOLD="\033[1m"; C_DIM="\033[2m"
-  C_RED="\033[31m"; C_GREEN="\033[32m"; C_YELLOW="\033[33m"; C_BLUE="\033[34m"
+  C_RESET=$'\033[0m'; C_BOLD=$'\033[1m'; C_DIM=$'\033[2m'
+  C_RED=$'\033[31m'; C_GREEN=$'\033[32m'; C_YELLOW=$'\033[33m'; C_BLUE=$'\033[34m'
 else
   C_RESET=""; C_BOLD=""; C_DIM=""; C_RED=""; C_GREEN=""; C_YELLOW=""; C_BLUE=""
 fi
@@ -532,6 +532,12 @@ has_selected_agent() {
   return 1
 }
 
+uses_claude_skill_compat() {
+  has_selected_agent opencode && return 0
+  has_selected_agent cursor && return 0
+  return 1
+}
+
 has_selected_framework() {
   local wanted_lang="$1" wanted_fw="$2"
   local entry lang fws fw
@@ -593,9 +599,31 @@ print_summary() {
   log "  languages:     ${SELECTED_LANGUAGES:-(none)}"
   log "  frameworks:    ${SELECTED_FRAMEWORKS:-(none)}"
   log "  technologies:  ${SELECTED_TECHNOLOGIES:-(none)}"
+  if ! has_selected_agent claude && uses_claude_skill_compat; then
+    log "  note:          Some selected adapters reuse .claude/skills as compatibility assets; this does not install Claude Code."
+  fi
   log "  files:         $files_count"
   log "  mode:          $([ "$DRY_RUN" = "1" ] && echo "dry-run" || echo "apply")"
   log ""
+}
+
+print_next_steps() {
+  log "Next steps:"
+  if has_selected_agent copilot; then
+    log "  - VS Code + Copilot: open $DEST and use ${C_BOLD}@orchestrator${C_RESET} in chat."
+  fi
+  if has_selected_agent claude; then
+    log "  - Claude Code:       ${C_BOLD}cd $DEST && claude --agent orchestrator${C_RESET}"
+  fi
+  if has_selected_agent opencode; then
+    log "  - OpenCode:          ${C_BOLD}cd $DEST && opencode${C_RESET}"
+  fi
+  if has_selected_agent cursor; then
+    log "  - Cursor:            open $DEST in Cursor and use the project rules from .cursor/rules."
+  fi
+  if has_selected_agent codex; then
+    log "  - Codex:             ${C_BOLD}cd $DEST && codex${C_RESET}"
+  fi
 }
 
 # ---------------------------------------------------------------------------
@@ -642,10 +670,7 @@ main() {
 
   log ""
   log "${C_GREEN}${C_BOLD}AI tools installed.${C_RESET}"
-  log "Next steps:"
-  log "  - VS Code + Copilot: open $DEST and use ${C_BOLD}@orchestrator${C_RESET} in chat."
-  log "  - Claude Code:       ${C_BOLD}cd $DEST && claude --agent orchestrator${C_RESET}"
-  log "  - OpenCode:          ${C_BOLD}cd $DEST && opencode${C_RESET}"
+  print_next_steps
 }
 
 main "$@"

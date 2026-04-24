@@ -108,6 +108,18 @@ Important official facts:
 
 This repository now uses that compatibility explicitly for installed OpenCode projects by shipping the shared `.claude/skills/` assets that OpenCode knows how to discover.
 
+The official docs in `rules` and `skills` also make the boundary clear:
+
+- `CLAUDE.md` compatibility is a fallback for project or global rules.
+- `.claude/skills/` compatibility is explicitly documented for shared skills.
+- OpenCode still documents native `.opencode/agents/` and `.opencode/commands/` for agents and commands; there is no corresponding documented `.claude/agents/` or `.claude/commands/` compatibility surface.
+
+For this repository, that means the standard shared-resource pattern with Claude is:
+
+- share baseline instructions through `AGENTS.md` plus `CLAUDE.md`
+- share reusable workflows through self-contained `.claude/skills/`
+- keep agents and command surfaces native to each tool
+
 ## Permissions
 
 OpenCode has a more explicit permission model than the committed Markdown instructions.
@@ -132,6 +144,7 @@ This repository aligns with OpenCode's official model in these ways:
 - `.opencode/agents/` contains native wrappers for the orchestrator and specialists.
 - `.opencode/commands/` provides native reusable command surfaces parallel to Copilot prompt files and Claude commands.
 - shared skills are available to OpenCode through the officially supported `.claude/skills/` compatibility path.
+- those shared `.claude/skills/` assets should remain self-contained so OpenCode does not need `.github/skills/` templates just to load Claude-compatible skills.
 
 ## References
 

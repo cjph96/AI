@@ -38,6 +38,14 @@ This keeps the workflow consistent across tools while preserving each platform's
 - **Evidence over claims** — completion is backed by observed test and review results.
 - **Human-in-the-loop by default** — planning and implementation remain easy to inspect and approve.
 
+## Shared resource pattern
+
+The documented common resource pattern between Claude Code and OpenCode is deliberately narrow:
+
+- `AGENTS.md` stays the cross-tool baseline, with `CLAUDE.md` importing it for Claude Code.
+- `.claude/skills/` is the shared on-demand workflow surface because Claude uses it natively and OpenCode discovers it through its documented Claude-compatibility path.
+- Agents and reusable slash commands remain native per tool in `.claude/agents/` plus `.claude/commands/` and `.opencode/agents/` plus `.opencode/commands/`, because OpenCode does not document `.claude/agents/` or `.claude/commands/` compatibility.
+
 ## Install in another project
 
 Run the one-liner from the target project's root directory:

@@ -35,7 +35,7 @@ Do not use for feature implementation.
 4. **Tests** — `make test` → else `npm test` / `vendor/bin/phpunit`.
 5. **Build** — `make build` → else `npm run build` (skip if not applicable).
 
-4. Parse outputs and map findings to `.github/skills/quality-gates/assets/report-template.md`.
+4. Parse outputs and map findings to `.claude/skills/quality-gates/assets/report-template.md`.
 5. Return the report with a clear verdict:
    - `Ready for PR` — all required gates pass.
    - `Changes required` — one or more gates fail.
@@ -49,6 +49,6 @@ Do not use for feature implementation.
 
 ## References
 
-- Report template: `.github/skills/quality-gates/assets/report-template.md`
+- Report template: `.claude/skills/quality-gates/assets/report-template.md`
 - Code quality policy: `.github/instructions/code-quality.instructions.md`
 - Testing policy: `.github/instructions/testing.instructions.md`
