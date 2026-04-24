@@ -38,4 +38,3 @@ Do not use for Symfony-specific execution details, Laravel package choice, or qu
 - `.github/instructions/php.instructions.md`
 - `.github/instructions/code-quality.instructions.md`
 - `.github/instructions/security.instructions.md`
-- `doc/php.md`

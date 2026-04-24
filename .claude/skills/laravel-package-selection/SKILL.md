@@ -27,5 +27,4 @@ Do not use outside Laravel repos or when the problem is unrelated to dependency 
 ## References
 
 - `.github/instructions/laravel.instructions.md`
-- `doc/php-laravel.md`
-- `doc/php-ecosystem.md`
+- `.github/instructions/php.instructions.md`

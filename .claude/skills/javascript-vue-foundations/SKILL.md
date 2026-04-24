@@ -18,7 +18,7 @@ Do not use for framework-neutral JS/TS decisions, React work, or quality-gate-on
 ## Actions
 
 1. Confirm the repo really uses Vue or Nuxt from `package.json`, app structure, and SFC files.
-2. Read `doc/javascript-vue.md` and `.github/instructions/javascript.instructions.md`.
+2. Read `.github/instructions/javascript.instructions.md` and prefer the repository's established Vue or Nuxt stack before introducing new patterns.
 3. Apply these Vue defaults unless the repository already standardizes otherwise:
    - Vue 3 Composition API
    - `<script setup>` for new SFCs
@@ -33,5 +33,4 @@ Do not use for framework-neutral JS/TS decisions, React work, or quality-gate-on
 ## References
 
 - `.github/instructions/javascript.instructions.md`
-- `doc/javascript-vue.md`
-- `doc/javascript-tooling.md`
+- `.claude/skills/javascript-quality-tooling/SKILL.md`

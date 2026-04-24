@@ -39,9 +39,9 @@ Do not use when the repository already standardizes the dependency or when the t
 
 ## References
 
-- `doc/typescript.md`
-- `doc/javascript.md`
-- `doc/javascript-tooling.md`
-- `doc/javascript-architecture.md`
+- `.github/instructions/javascript.instructions.md`
+- `.github/instructions/code-quality.instructions.md`
+- `.github/instructions/security.instructions.md`
 - `.claude/skills/javascript-react-foundations/SKILL.md`
 - `.claude/skills/javascript-vue-foundations/SKILL.md`
+- `.claude/skills/javascript-quality-tooling/SKILL.md`

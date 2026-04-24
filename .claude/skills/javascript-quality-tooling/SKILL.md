@@ -35,7 +35,6 @@ Do not use for package-choice tasks or pure feature planning.
 
 ## References
 
+- `.github/instructions/javascript.instructions.md`
 - `.github/instructions/javascript-testing.instructions.md`
 - `.github/instructions/testing.instructions.md`
-- `doc/javascript-tooling.md`
-- `doc/javascript-architecture.md`

@@ -36,7 +36,6 @@ Do not use for dependency-choice tasks or pure architectural planning.
 
 ## References
 
+- `.github/instructions/php.instructions.md`
 - `.github/instructions/php-testing.instructions.md`
 - `.github/instructions/testing.instructions.md`
-- `doc/php-testing.md`
-- `doc/php-stan.md`

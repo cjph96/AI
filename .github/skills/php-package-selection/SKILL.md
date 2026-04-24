@@ -35,5 +35,4 @@ Do not use when the repository already chose the dependency or when the task is 
 ## References
 
 - `.github/instructions/php.instructions.md`
-- `doc/php-ecosystem.md`
-- `doc/php-laravel.md`
+- `.github/skills/laravel-package-selection/SKILL.md`

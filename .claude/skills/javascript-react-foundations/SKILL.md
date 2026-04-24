@@ -18,7 +18,7 @@ Do not use for framework-neutral JS/TS decisions, Vue work, or quality-gate-only
 ## Actions
 
 1. Confirm the repo really uses React or a React meta-framework from `package.json`, routing structure, and component file extensions.
-2. Read `doc/javascript-react.md` and `.github/instructions/javascript.instructions.md`.
+2. Read `.github/instructions/javascript.instructions.md` and prefer the repository's established React stack before introducing new patterns.
 3. Apply these React defaults unless the repository already standardizes otherwise:
    - function components and hooks
    - typed props without `React.FC` unless the repo already uses it
@@ -33,5 +33,4 @@ Do not use for framework-neutral JS/TS decisions, Vue work, or quality-gate-only
 ## References
 
 - `.github/instructions/javascript.instructions.md`
-- `doc/javascript-react.md`
-- `doc/javascript-tooling.md`
+- `.claude/skills/javascript-quality-tooling/SKILL.md`

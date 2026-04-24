@@ -39,7 +39,5 @@ Do not use for framework-specific package choice or quality-gate-only requests.
 - `.github/instructions/javascript.instructions.md`
 - `.github/instructions/code-quality.instructions.md`
 - `.github/instructions/security.instructions.md`
-- `doc/javascript.md`
-- `doc/typescript.md`
 - `.github/skills/javascript-react-foundations/SKILL.md`
 - `.github/skills/javascript-vue-foundations/SKILL.md`
